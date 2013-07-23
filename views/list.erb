@@ -1,0 +1,32 @@
+
+<h2><%= @title %></h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Cuisine</th>
+      <th>Neighborhood</th>
+      <th>Other Lists</th>
+      <th>Notes</th>
+    </tr>
+    <% @source.restaurants.each do |rest| %>
+    <tr>
+      <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
+      <td>
+        <% rest.cuisines.each do |cuisine| %>
+          <%= cuisine.name %>
+          <br>
+        <% end %>
+      </td>
+      <td><%= rest.neighborhood %></td>
+      <td>
+        <% rest.sources.each do |source| %>
+          <% unless source.name == @title %>
+            <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
+          <% end %>
+        <% end %>
+      </td>
+      <td><%= rest.notes %></td>  
+      <td><a href = '/edit/<%=rest.slug%>'>Edit</a></td>
+      <td><a href = '/delete/<%=rest.slug%>/<%=@source.slug%>'>Delete</a></td>  
+    <% end %>
+  </table>

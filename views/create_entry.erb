@@ -1,0 +1,26 @@
+
+<h2><%= @user.name %></h2>
+
+<h2>Enter a new restaurant</h2>
+
+
+<br/>
+  <form action = "/entry/<%= @user.id %>" method ="post">
+    <label for="source_name">Choose List to Add to:</label>
+   
+    <select name="source[name]">
+      <% @user.base_source.sources.each do |source| %>
+        <option value = "<%= source.name %>"><%=source.name%></option>
+        <% end %>
+    
+      <option value = "New List">New List</option>
+    </select>
+    <label for="new_source_name">Name of New List:</label>
+    <input id="new_source_name" name="new_source[name]" type="text" size = "10">
+    <label for="rest_name">Name:</label>
+    <input id="rest_name" name="restaurant[name]" type="text"  size="10">
+    <input type="submit" value="Enter!"/>
+  </form>
+
+
+

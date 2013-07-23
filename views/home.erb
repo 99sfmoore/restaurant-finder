@@ -1,0 +1,34 @@
+<h2>Find a Restaurant</h2>
+
+  <form action = "/rest_page" method ="get">
+    <label for="rest_name">Find a restaurant</label>
+    <input id="rest_name" name="rest_name" type="text" value="" size="10">
+
+    <input type="submit" value="I'm hungry!"/>
+  </form>
+
+<h2>Restaurant Ideas</h2>
+  <ul>
+    <% @sources.each do |source| %>
+    <li><a href='/source/<%= source.slug %>'><%= source.name %></a></li>
+    <% end %>
+  </ul>
+
+<h2>Load new source from:</h2>
+  <form action = "/load_source" method ="post"> <!-- fix this -->
+    <label for="base_source">Choose a method:</label>
+    <select name = "base_id">
+    <% @bases.each do |base| %>
+      <% unless base.name == @user.name %>
+      <option value = '<%= base.id %>'><%= base.name %></option>
+      <% end %>
+    <% end %>
+  </select>
+    <label for="source_name">Enter name of new source:</label>
+    <input id="source_name" name="source[name]" type="text" value="" size="10">
+    
+    <label for="source_url">Enter url of new source:</label>
+    <input id="source_url" name="source[url]" type="text" value="" size="10">
+    
+    <input type="submit" value="Load source!"/>
+  </form>

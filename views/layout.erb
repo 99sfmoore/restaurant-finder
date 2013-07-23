@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @title %></title>
+  <link href="/css/bootstrap.css" rel = "stylesheet">
+  <link href="/css/bootstrap.min.css" rel = "stylesheet">
+</head>
+<body style="padding-top: 50px">
+  <div class="navbar navbar-fixed-top">
+    <div class = "navbar-inner">
+      <div class = "container">
+        <a class="brand" href="/">
+          Where to Eat?
+        </a>
+        <ul class="nav pull-right">
+          <li><a href="/">Home</a></li>
+          <li><a href="/entry">New Restaurant</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <%= yield %>
+  </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+
+<h1><%= @restaurant.name %></h1>
+
+<h3><%= @restaurant.address %>
+  <br><%= @restaurant.cross_street %>
+  <br><%= @restaurant.area %> / <%= @restaurant.neighborhood %>
+  <% @restaurant.cuisines.each do |cuisine| %>
+    <br><%=cuisine.name%>
+    <%end%></h3>
+  <h2>Lists</h2>
+  <h3>
+  <% @restaurant.sources.each do |source| %>
+    <%= source.name+"  "%>
+    <%end%>
+  </h3>
+  <h2> Notes</h2>
+  <h3><%= @restaurant.notes %></h3>
+  <h1><%= @restaurant.name %> Menu<h1>
+  <%= @menu %>
+
+
+
