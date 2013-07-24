@@ -1,5 +1,6 @@
 require 'active_record'
 require 'mysql2'
+require 'stringex'
 
 ActiveRecord::Base.establish_connection(
   :adapter => "mysql2",
@@ -118,7 +119,18 @@ def make_database # I think I only have to do this once
   end
 =end
   ActiveRecord::Migration.create_join_table :cuisines, :restaurants
+
 end
+
+=begin
+  
+class AddSlugs < ActiveRecord::Migration ## this is weird, figure out migrate
+    def up
+      add_column :cuisines, :slug, :string
+      add_column :neighborhood, :slug, :string
+    end
+  end
+=end
 
 =begin
 make_database
@@ -127,5 +139,15 @@ user.base_source = BaseSource.create(name: "Sarah")
 user.save
 BaseSource.create(name: "Serious Eats", base_url: "http://newyork.seriouseats.com")
 BaseSource.create(name: "Eater", base_url: "http://ny.eater.com")
+=end
+
+
+
+=begin
+cuisines = Cuisine.all
+cuisines.each do |c|
+  c.slug = c.name.to_url
+  c.save
+end
 =end
 

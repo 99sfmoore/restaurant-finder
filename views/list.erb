@@ -8,16 +8,16 @@
       <th>Other Lists</th>
       <th>Notes</th>
     </tr>
-    <% @source.restaurants.each do |rest| %>
+    <% @restaurant_list.each do |rest| %>
     <tr>
       <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
       <td>
         <% rest.cuisines.each do |cuisine| %>
-          <%= cuisine.name %>
+          <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
           <br>
         <% end %>
       </td>
-      <td><%= rest.neighborhood %></td>
+      <td><a href = '/neighborhood/<%= rest.neighborhood %>'><%= rest.neighborhood %></td>
       <td>
         <% rest.sources.each do |source| %>
           <% unless source.name == @title %>
@@ -27,6 +27,6 @@
       </td>
       <td><%= rest.notes %></td>  
       <td><a href = '/edit/<%=rest.slug%>'>Edit</a></td>
-      <td><a href = '/delete/<%=rest.slug%>/<%=@source.slug%>'>Delete</a></td>  
+      <td><a href = '/delete/<%=rest.slug%>'>Delete</a></td>  
     <% end %>
   </table>

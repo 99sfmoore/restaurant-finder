@@ -23,7 +23,23 @@ end
 
 get '/source/:source_name' do
   @source = Source.find_by(:slug => params[:source_name])
+  @restaurant_list = @source.restaurants
   @title = @source.name
+  erb :list
+end
+
+get '/cuisine/:cuisine' do
+  @cuisine = Cuisine.find_by(slug: params[:cuisine])
+  @restaurant_list = @cuisine.restaurants
+  @title = @cuisine.name
+  erb :list
+end
+
+get '/neighborhood/:neighborhood' do
+  @neighborhood_name = params[:neighborhood]
+  #binding.pry
+  @restaurant_list = Restaurant.where("neighborhood = ?", @neighborhood_name)
+  @title = @neighborhood_name
   erb :list
 end
 
@@ -117,6 +133,7 @@ get '/delete/:rest_name/:source_name' do
 end
 
 post '/delete/:rest_name/:source_name' do
+  #binding.pry
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
   @source = Source.find_by(slug: params[:source_name])
   if params[:choice] == "total_delete"
@@ -124,7 +141,7 @@ post '/delete/:rest_name/:source_name' do
   else
     @restaurant.sources.delete(@source)
   end 
-  redirect "/source/#{@source.name}"
+  redirect "/source/#{@source.slug}"
 end
 
 get '/edit/:rest_name' do
@@ -146,11 +163,13 @@ post '/edit/:rest_name' do
   else
 =end
     Restaurant.update(@restaurant.id, params[:restaurant])
-    @restaurant.save
     @restaurant.fill
   #end
   redirect "/rest_page/#{@restaurant.slug}"
 end
+
+
+
 
 get '/wtf/:rest_name/:source_name' do
   @restaurant = Restaurant.find_by(name: params[:rest_name])
