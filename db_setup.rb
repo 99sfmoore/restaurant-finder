@@ -1,6 +1,7 @@
 require 'active_record'
 require 'mysql2'
 require 'stringex'
+require 'pry-nav'
 
 ActiveRecord::Base.establish_connection(
   :adapter => "mysql2",
@@ -44,6 +45,7 @@ end
 
 class BaseSource < ActiveRecord::Base
   has_many :sources
+  serialize :bad_names, Array
 end
 
 class Source < ActiveRecord::Base
@@ -124,6 +126,55 @@ def make_database # I think I only have to do this once
 end
 
 
+class AddErrorstoBase < ActiveRecord::Migration
+  def up
+    add_column :base_sources, :error, :text
+  end
+end
+
+class MakeErrorPlural < ActiveRecord::Migration
+  def up
+    rename_column :base_sources, :error, :errors
+  end
+end
+
+
+class DeleteErrorColumn < ActiveRecord::Migration
+  def up
+    remove_column :base_sources, :errors
+  end
+end
+
+
+class AddBadNamesToBase < ActiveRecord::Migration
+  def up
+    add_column :base_sources, :bad_names, :text
+  end
+
+  def down
+    remove_column :base_sources, :bad_names
+  end
+end
+
+
+
+@base = BaseSource.find_by(name: "Serious Eats")
+@base.bad_names = ["Comment Policy page","report an inappropriate comment."]
+p @base.bad_names
+@base.save
+
+=begin
+@bases = BaseSource.all
+binding.pry
+@bases.each do |b|
+
+  if b.name == "Eater"
+    b.bad_names.concat(["Eater Maps","Top","Has Map","Eater 38"])
+  elsif b.name == "Serious Eats"
+    b.bad_names.concat(["Comment Policy page","report an inappropriate comment."])
+  end
+end
+=end
 
 
 

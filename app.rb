@@ -15,7 +15,6 @@ configure do
  @@cuisine_list = Cuisine.order(:name)
  @@area_list = Restaurant.all.map{|r| r.area}.compact.uniq.sort
  @@source_list = Source.order(:name)
- #binding.pry
 end
 
 
@@ -33,6 +32,26 @@ get '/all' do
   @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes"]
   erb :list
 end
+
+get '/source/new/:source' do
+  @source = Source.find_by(:slug => params[:source])
+  @restaurant_list = @source.restaurants.order(:name)
+  @title = @source.name
+  @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes","Delete"]
+  erb :correct_source
+end
+
+post '/correct-source/:source' do
+  @source = Source.find_by(slug: params[:source])
+  @base_source = @source.base_source
+  @rest_ids_to_delete = params.select{|k,v| v == "on"}.keys
+  @errors = Restaurant.find(@rest_ids_to_delete).map{|r| r.name}
+  @base_source.bad_names.concat(@errors)
+  @base_source.save
+  Restaurant.delete(@rest_ids_to_delete)
+  redirect "/source/#{@source.slug}"
+end
+
 
 get '/source/:source' do
   @source = Source.find_by(:slug => params[:source])
@@ -75,7 +94,7 @@ post '/load_source' do
   @source.save # do I need this?
   @base.sources << @source
   fill_from(@source) #is there a better way to access the newly created source?
-  redirect "/source/#{@source.slug}"
+  redirect "/source/new/#{@source.slug}"
 end
 
 get '/rest_page/:rest_name' do
@@ -176,15 +195,18 @@ get '/edit/:rest_name' do
 end  
 
 post '/edit/:rest_name' do
+  binding.pry
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
-  @duplicate_restaurant = Restaurant.find_by(name: params[:restaurant][:name])
-  if @duplicate_restaurant
-    @duplicate_restaurant.sources.concat(@restaurant.sources)
-    @duplicate_restaurant.sources.uniq!
-    @restaurant.destroy
-    @restaurant = @duplicate_restaurant
+  if params[:restaurant][:name] != @restaurant.name #look if restaurant is already in database
+    @duplicate_restaurant = Restaurant.find_by(name: params[:restaurant][:name])
+    if @duplicate_restaurant #if it is, just add sources
+      @duplicate_restaurant.sources.concat(@restaurant.sources)
+      @duplicate_restaurant.sources.uniq!
+      @restaurant.destroy
+      @restaurant = @duplicate_restaurant
+    end
   else
-    Restaurant.update(@restaurant.id, params[:restaurant])
+    @restaurant.update_attributes(params[:restaurant])
     @restaurant.fill
   end
   redirect "/rest_page/#{@restaurant.slug}"

@@ -3,14 +3,15 @@
 
 <h4><%= @restaurant.address %>
   <br><%= @restaurant.cross_street %>
-  <br><%= @restaurant.area %> / <%= @restaurant.neighborhood %>
+  <br><a href="/area/<%=@restaurant.area%>"><%= @restaurant.area %></a> / <a href="/neighborhood/<%= @restaurant.neighborhood %>"><%= @restaurant.neighborhood %></a>
   <% @restaurant.cuisines.each do |cuisine| %>
-    <br><%=cuisine.name%>
+    <br><a href="/cuisine/<%=cuisine.slug%>"><%=cuisine.name%></a>
     <%end%></h4>
-  <h2>Lists</h2>
+  <h2>Appears in lists:</h2>
   <h4>
   <% @restaurant.sources.each do |source| %>
-    <%= source.name+"  "%>
+    <a href="/source/<%=source.slug%>"><%= source.name %></a>
+    <br>
     <%end%>
   </h4>
   <h2> Notes</h2>

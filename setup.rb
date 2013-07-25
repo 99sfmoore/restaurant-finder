@@ -7,22 +7,21 @@ require 'stringex'
 MENU_PAGES_URL = "http://www.menupages.com"
 def scrape(source)
   basesource = source.base_source
+  errors = basesource.bad_names
   
   case basesource.name
 
   when "Eater"
-    eater_errors = ["Eater Maps","Top","Has Map","Eater 38"]
     page = Nokogiri::HTML(open(source.url))
     eater_page = page.css("div.block-anchor a")
     eater_names = eater_page.select {|item| item['href'].match("/tags/")}
     result = eater_names.map {|n| n.children.text.gsub(/\s{2,}/,"")}
-    result.reject!{|name| eater_errors.include?(name)}
+    result.reject!{|name| errors.include?(name)}
   when "Serious Eats"
-    se_errors = ["Comment Policy page","report an inappropriate comment."]
     page = Nokogiri::HTML(open(source.url))
     se_page = page.css("p > a")
     result = se_page.map{|item| item.text}
-    result.reject!{|name| se_errors.include?(name)}
+    result.reject!{|name| errors.include?(name)}
   end
   result
 end
