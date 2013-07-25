@@ -1,0 +1,20 @@
+
+<h2><%= @title %></h2>
+
+  <table>
+    <tr>
+      <td>Restaurant</td>
+      <td>Date Visited</td>
+      <td>Notes</td>
+    </tr>
+    <% @history.each do |visit| %>
+    <tr>
+      <td><a href = '/rest_page/<%= visit.restaurant.slug %>'><%=visit.restaurant.name %></a></td>
+      <td>
+        <%= visit.date %>
+      </td>
+      <td>
+        <%= visit.notes %>
+      </td>
+    <% end %>
+  </table>

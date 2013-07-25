@@ -1,0 +1,37 @@
+
+<h2><%= @title %></h2>
+<form action = "/correct-source/<%=@source.slug%>" method = "post">
+  <label for="delete_button">Check any items in the list that should not have been imported(i.e. not restaurants)</label>
+  <input id="delete_button" type="submit" value="Delete these restaurants">
+  <table>
+    <tr>
+      <% @headers.each do |head| %>
+        <th><%= head %></th>
+      <% end %>
+    </tr>
+    <% @restaurant_list.each do |rest| %>
+    <tr>
+      <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
+      <td>
+        <% rest.cuisines.each do |cuisine| %>
+          <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
+          <br>
+        <% end %>
+      </td>
+      <% if @headers.include?("Neighborhood") %>
+        <td><a href = '/neighborhood/<%= rest.neighborhood %>'><%= rest.neighborhood %></td>
+      <% end %>
+      <td>
+        <% rest.sources.each do |source| %>
+          <% unless source.name == @title %>
+            <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
+          <% end %>
+        <% end %>
+      </td>
+      <td><%= rest.notes %></td>  
+      <td><input type="checkbox" name="<%=rest.id%>"></td> 
+    <% end %>
+    
+  </table>
+  <input type="submit" value="Delete these restaurants">
+</form>

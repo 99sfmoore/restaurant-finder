@@ -1,0 +1,43 @@
+Debug dropdowns -- arrows are everyplace
+
+DONE!!! (But it's a mystery how) Sort by column headings
+
+Narrow within lists
+
+Allow for multiple locations of restaurants w/ same name
+
+Deal with Users
+  Logins????
+
+Deal with Notes
+
+Deal with History
+  Format dates correctly
+
+DONE !!!After loading source
+  Have checkboxes for is this good?
+  use to delete & make the base_source smarter
+
+DONE !!! Added other SE scraper
+
+Deal with format of restaurant page itself
+  Add features
+    DONE!! - make items links
+    Map
+    other links (Times Review, Yelp, etc.)
+
+
+Questions
+  Canonical file organization
+    Gemfile
+    Rake???
+    DB migrations
+    helper methods, etc.
+
+  ActiveRecord validations
+
+  Is it worth "metaprogramming" routes?
+
+  How do the @@variables automatically update?
+
+  Way to speed up loading, have it happen in background, threads?!?!

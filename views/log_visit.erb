@@ -1,0 +1,18 @@
+
+
+<h2>Log visit to <%= @restaurant.name %>:</h2>
+
+<br/>
+  <form action = "/log-visit" method ="post">
+    <label for="visit_date">Date of Visit:</label>
+    <input id="visit_date" name="visit[date]" type="date" size="10">
+    
+    <label for="notes">Notes:</label>
+    <textarea id="notes" name="visit[notes]" type="textarea"  size="10" rows="10"></textarea>
+    <input type="hidden" name="visit[restaurant_id]" value="<%=@restaurant.id%>"></hidden>
+    <input type="hidden" name="user" value="<%=@user.id%>"></user>
+    <input type="submit" value="Enter!"/>
+  </form>
+
+
+
