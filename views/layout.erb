@@ -6,6 +6,12 @@
   <link href="/css/bootstrap.min.css" rel = "stylesheet">
 </head>
 <body style="padding-top: 50px">
+
+  <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+  <!-- works only WITHOUT min.js ??? -->
+
+
   <div class="navbar navbar-fixed-top">
     <div class = "navbar-inner">
       <div class = "container">
@@ -13,8 +19,40 @@
           Where to Eat?
         </a>
         <ul class="nav pull-right">
-          <li><a href="/">Home</a></li>
-          <li><a href="/entry">New Restaurant</a></li>
+          <li><a href="/log_visits">Log Visits</a></li>
+          <li><a href="/entry">Add Restaurant</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Find By<b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li class="dropdown-submenu"><a tabindex="-1" href="#">Lists</a>
+                <ul class="dropdown-menu">
+                  <% @@source_list.each do |s| %>
+                  <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                  <% end %>
+                </ul>
+              </li>
+              <li class="dropdown-submenu"><a tabindex="-1" href="#">Cuisine</a>
+                <ul class="dropdown-menu">
+                  <% @@cuisine_list.each do |c| %>
+                  <li><a href="/cuisine/<%=c.slug%>"><%=c.name%></li>
+                  <% end %>
+                </ul>
+              </li>
+              <li class="dropdown-submenu"><a tabindex="-1" href="#">Neighborhood</a>
+                <ul class="dropdown-menu">
+                  <% @@area_list.each do |a| %>
+                    <li><a href="/area/<%= a %>"><%= a %></li>
+                  <% end %>
+                </ul>
+              </li>
+              <li class="divider"></li>
+              <li><a tabindex="-1" href="/all">All Restaurants</a></li>
+            </ul>
+          </li>
+          <li><form action = "/rest_page" method = "get" class="navbar-search pull-left">
+              <input type="text" class="search-query" name="rest_name" placeholder="Search by Restaurant Name">
+              </form>
+          </li>
         </ul>
       </div>
     </div>

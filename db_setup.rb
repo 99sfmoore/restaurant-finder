@@ -49,6 +49,7 @@ end
 class Source < ActiveRecord::Base
   belongs_to :base_source
   has_and_belongs_to_many :restaurants
+  has_one :note
 end
 
 class Cuisine < ActiveRecord::Base
@@ -121,6 +122,10 @@ def make_database # I think I only have to do this once
   ActiveRecord::Migration.create_join_table :cuisines, :restaurants
 
 end
+
+
+
+
 
 =begin
   

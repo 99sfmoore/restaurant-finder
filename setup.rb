@@ -69,7 +69,7 @@ end
 
 def get_cuisine(infopage)
   infopage.css("li.cuisine.category").text.split(", ").map do |cname|
-    Cuisine.find_or_create_by(name: cname)
+    Cuisine.find_or_create_by(name: cname, slug: cname.to_url)
   end
 end
 

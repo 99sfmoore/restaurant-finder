@@ -11,35 +11,60 @@ require 'pry-nav'  #use with binding.pry at debugging point
 
 #enable :sessions #what does this do?? DB???
 
+configure do
+ @@cuisine_list = Cuisine.order(:name)
+ @@area_list = Restaurant.all.map{|r| r.area}.compact.uniq.sort
+ @@source_list = Source.order(:name)
+ #binding.pry
+end
+
 
 get '/' do
   @title = "Restaurant List"
-  @restaurant = Restaurant.new #not sure if I need this
   @sources = Source.all
   @bases = BaseSource.all
   @user = User.find_by(name: "Sarah") # fix this later
   erb :home
 end
 
-get '/source/:source_name' do
-  @source = Source.find_by(:slug => params[:source_name])
-  @restaurant_list = @source.restaurants
+get '/all' do
+  @title = "All Restaurants"
+  @restaurant_list = Restaurant.order(:name)
+  @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes"]
+  erb :list
+end
+
+get '/source/:source' do
+  @source = Source.find_by(:slug => params[:source])
+  @restaurant_list = @source.restaurants.order(:name)
   @title = @source.name
+  @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes"]
   erb :list
 end
 
 get '/cuisine/:cuisine' do
   @cuisine = Cuisine.find_by(slug: params[:cuisine])
-  @restaurant_list = @cuisine.restaurants
+  @restaurant_list = @cuisine.restaurants.order(:name)
   @title = @cuisine.name
+  @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
   erb :list
 end
 
 get '/neighborhood/:neighborhood' do
   @neighborhood_name = params[:neighborhood]
   #binding.pry
-  @restaurant_list = Restaurant.where("neighborhood = ?", @neighborhood_name)
+  @restaurant_list = Restaurant.where("neighborhood = ?", @neighborhood_name).order(:name)
   @title = @neighborhood_name
+  @headers = ["Name","Cuisine","Lists","Notes"]
+  @area = @restaurant_list.first.area
+  erb :list
+end
+
+get '/area/:area' do
+  @area_name = params[:area]
+  @restaurant_list = Restaurant.where("area = ?", @area_name)
+  @title = @area_name
+  @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
   erb :list
 end
 
@@ -50,7 +75,7 @@ post '/load_source' do
   @source.save # do I need this?
   @base.sources << @source
   fill_from(@source) #is there a better way to access the newly created source?
-  redirect '/'
+  redirect "/source/#{@source.slug}"
 end
 
 get '/rest_page/:rest_name' do
@@ -126,22 +151,23 @@ post '/entry/:user_id' do
   #end
 end
 
-get '/delete/:rest_name/:source_name' do
+get '/delete/:rest_name' do 
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
-  @source = Source.find_by(slug: params[:source_name])
+  #@source = Source.find_by(slug: params[:source_name])
   erb :delete
 end
 
-post '/delete/:rest_name/:source_name' do
+post '/delete/:rest_name' do #add source name back
   #binding.pry
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
-  @source = Source.find_by(slug: params[:source_name])
+  @source = Source.find_by(name: "Favorites")
+  #@source = Source.find_by(slug: params[:source_name])
   if params[:choice] == "total_delete"
     @restaurant.destroy
   else
     @restaurant.sources.delete(@source)
   end 
-  redirect "/source/#{@source.slug}"
+  redirect "/" #/source/#{@source.slug}"
 end
 
 get '/edit/:rest_name' do
@@ -151,22 +177,40 @@ end
 
 post '/edit/:rest_name' do
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
-  #binding.pry
-=begin 
   @duplicate_restaurant = Restaurant.find_by(name: params[:restaurant][:name])
   if @duplicate_restaurant
-    @duplicate_restaurant.sources += @restaurant.sources
+    @duplicate_restaurant.sources.concat(@restaurant.sources)
     @duplicate_restaurant.sources.uniq!
     @restaurant.destroy
     @restaurant = @duplicate_restaurant
-
   else
-=end
     Restaurant.update(@restaurant.id, params[:restaurant])
     @restaurant.fill
-  #end
+  end
   redirect "/rest_page/#{@restaurant.slug}"
 end
+
+get '/log-visit/:rest' do #not using this yet
+  @user = User.find_by(name: "Sarah") #fix this
+  @restaurant = Restaurant.find_by(slug: params[:rest])
+  erb :log_visit
+end
+
+post '/log-visit' do
+  @user = User.find(params[:user])
+  @visit = Visit.create(params[:visit])
+  @user.visits << @visit
+  redirect "/user_history/#{@user.id}"
+end
+
+get '/user_history/:user' do
+  @user = User.find(params[:user])
+  @history = @user.visits
+  @title = "#{@user.name}'s History"
+  erb :history
+end
+
+
 
 
 

@@ -1,20 +1,20 @@
 
-<h1><%= @restaurant.name %></h1>
+<h1><%= @restaurant.name %></h1> <a href="/log-visit/<%= @restaurant.slug %>">log visit</a>
 
-<h3><%= @restaurant.address %>
+<h4><%= @restaurant.address %>
   <br><%= @restaurant.cross_street %>
   <br><%= @restaurant.area %> / <%= @restaurant.neighborhood %>
   <% @restaurant.cuisines.each do |cuisine| %>
     <br><%=cuisine.name%>
-    <%end%></h3>
+    <%end%></h4>
   <h2>Lists</h2>
-  <h3>
+  <h4>
   <% @restaurant.sources.each do |source| %>
     <%= source.name+"  "%>
     <%end%>
-  </h3>
+  </h4>
   <h2> Notes</h2>
-  <h3><%= @restaurant.notes %></h3>
+  <h4><%= @restaurant.notes %></h4>
   <h1><%= @restaurant.name %> Menu<h1>
   <%= @menu %>
 

@@ -1,12 +1,13 @@
 
 <h2><%= @title %></h2>
+<% if @area %>
+  Do you want to see restaurants in the entire <a href="/area/<%= @area %>"><%= @area %>?</a>
+<% end %>
   <table>
     <tr>
-      <th>Name</th>
-      <th>Cuisine</th>
-      <th>Neighborhood</th>
-      <th>Other Lists</th>
-      <th>Notes</th>
+      <% @headers.each do |head| %>
+        <th><%= head %></th>
+      <% end %>
     </tr>
     <% @restaurant_list.each do |rest| %>
     <tr>
@@ -17,7 +18,9 @@
           <br>
         <% end %>
       </td>
-      <td><a href = '/neighborhood/<%= rest.neighborhood %>'><%= rest.neighborhood %></td>
+      <% if @headers.include?("Neighborhood") %>
+        <td><a href = '/neighborhood/<%= rest.neighborhood %>'><%= rest.neighborhood %></td>
+      <% end %>
       <td>
         <% rest.sources.each do |source| %>
           <% unless source.name == @title %>
