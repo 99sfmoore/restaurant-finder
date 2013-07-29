@@ -1,8 +1,10 @@
-<h2>Do you want to delete restaurant entirely or just from the list <%= %>?</h2>
+<h2>Do you want to delete restaurant entirely or just from a list?</h2>
 
 <form action = "/delete/<%= @restaurant.slug %>" method ="post">
 <input type="radio" name="choice" value="total_delete">Delete restaurant entirely<br>
-<input type="radio" name="choice" value="list_delete">Delete from list only<br>
+<% @restaurant.sources.each do |s| %>
+<input type="radio" name="choice" value="<%=s.id%>">Delete from list <%= s.name %><br>
+<% end %>
 <input type="submit" value="Delete"/>
 </form>
 

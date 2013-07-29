@@ -3,12 +3,15 @@
 <% if @area %>
   Do you want to see restaurants in the entire <a href="/area/<%= @area %>"><%= @area %>?</a>
 <% end %>
-  <table>
+  <table id="list_table" class="tablesorter">
+    <thead>
     <tr>
       <% @headers.each do |head| %>
         <th><%= head %></th>
       <% end %>
     </tr>
+  </thead>
+  <tbody>
     <% @restaurant_list.each do |rest| %>
     <tr>
       <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
@@ -32,4 +35,11 @@
       <td><a href = '/edit/<%=rest.slug%>'>Edit</a></td>
       <td><a href = '/delete/<%=rest.slug%>'>Delete</a></td>  
     <% end %>
+  </tbody>
   </table>
+  
+<script>
+  $(function(){
+  $("#list_table").tablesorter();
+  });
+</script>

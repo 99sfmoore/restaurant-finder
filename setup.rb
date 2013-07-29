@@ -3,8 +3,11 @@ require 'nokogiri'
 require 'net/http'
 require 'open-uri'
 require 'stringex'
+require 'pry-nav'
 
 MENU_PAGES_URL = "http://www.menupages.com"
+
+
 def scrape(source)
   basesource = source.base_source
   errors = basesource.bad_names
@@ -17,20 +20,26 @@ def scrape(source)
     eater_names = eater_page.select {|item| item['href'].match("/tags/")}
     result = eater_names.map {|n| n.children.text.gsub(/\s{2,}/,"")}
     result.reject!{|name| errors.include?(name)}
-  when "Serious Eats"
+  when "Serious Eats Neighborhood Guide"
     page = Nokogiri::HTML(open(source.url))
     se_page = page.css("p > a")
+    result = se_page.map{|item| item.text}
+    result.reject!{|name| errors.include?(name)}
+  when "Serious Eats"
+    page = Nokogiri::HTML(open(source.url))
+    se_page = page.css("p > strong > a")
     result = se_page.map{|item| item.text}
     result.reject!{|name| errors.include?(name)}
   end
   result
 end
 
-def fill_from(source)
+def fill_from(source) #see threaded, below
   name_list = scrape(source)
+  puts name_list
   name_list.each do |name|
-    unless restaurant = Restaurant.find_by(name: name)
-      infolink = menulink(name)
+    infolink = menulink(name)
+    unless restaurant = Restaurant.find_by(name: name, menulink: infolink)
       if test_link(infolink)
         infopage = Nokogiri::HTML(open(infolink))
         nhood_info = get_neighborhood(infopage)
@@ -48,6 +57,35 @@ def fill_from(source)
     end
     restaurant.sources << source
   end
+end
+
+def threaded_fill_from(source) #there should be a better way to do this.
+  name_list = scrape(source)
+  puts name_list
+  threads = []
+  name_list.each do |name|
+    threads << Thread.new do
+      infolink = menulink(name)
+      unless restaurant = Restaurant.find_by(name: name, menulink: infolink)
+        if test_link(infolink)
+          infopage = Nokogiri::HTML(open(infolink))
+          nhood_info = get_neighborhood(infopage)
+          restaurant = Restaurant.create( :name =>name,
+                                          :slug =>name.to_url,
+                                          :menulink => infolink, 
+                                          :address => get_address(infopage), 
+                                          :cross_street => get_cross_street(infopage),
+                                          :area => nhood_info[:area],
+                                          :neighborhood => nhood_info[:neighborhood])
+          restaurant.cuisines.concat(get_cuisine(infopage))
+        else 
+          restaurant = Restaurant.create(:name => name, :slug => name.to_url)
+        end
+      end
+      restaurant.sources << source
+    end
+  end
+  threads.each {|t| t.join}
 end
 
 def test_link(link)

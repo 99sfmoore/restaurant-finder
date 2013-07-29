@@ -15,6 +15,7 @@ configure do
  @@cuisine_list = Cuisine.order(:name)
  @@area_list = Restaurant.all.map{|r| r.area}.compact.uniq.sort
  @@source_list = Source.order(:name)
+ @@user = User.find_by(name: "Sarah")
 end
 
 
@@ -93,7 +94,7 @@ post '/load_source' do
   @source.slug = @source.name.to_url
   @source.save # do I need this?
   @base.sources << @source
-  fill_from(@source) #is there a better way to access the newly created source?
+  fill_from(@source) 
   redirect "/source/new/#{@source.slug}"
 end
 
@@ -109,20 +110,14 @@ get '/rest_page/:rest_name' do
   end
 end
 
-get '/rest_page' do #fixed by url -- I think!
-  redirect "/rest_page/#{params[:rest_name].to_url}"
-end
-
-get '/menu/:name' do # I don't think I use this anymore
-  @restaurant = Restaurant.find_by(name: params[:name])
-  if @restaurant
-    @title = @restaurant.name + " Menu"
-    @menulink = @restaurant.menulink #this is also in db, could change
-    @menu = get_menu(@restaurant.name)
-    erb :menu
+get '/rest_page' do 
+  @search_string = params[:rest_name]
+  @restaurant_list = Restaurant.where(name: @search_string)
+  if @restaurant_list.size == 1
+    redirect "/rest_page/#{@search_string.to_url}"
   else
-    @name = params[:rest_name]
-    erb :not_found
+    @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
+    erb :list
   end
 end
 
@@ -139,17 +134,6 @@ post '/entry/:user_id' do
     @restaurant = Restaurant.create(params[:restaurant])
     @restaurant.menulink = menulink(@restaurant.name)
     @restaurant.fill
-=begin    
-  infolink = menulink(@restaurant.name)
-  infopage = Nokogiri::HTML(open(infolink))
-  @restaurant.menulink = menulink(infolink)
-  @restaurant.address = get_address(infopage)
-  @restaurant.cross_street = get_cross_street(infopage)
-  nhood_info = get_neighborhood(infopage)
-  @restaurant.area = nhood_info[:area]
-  @restaurant.neighborhood = nhood_info[:neighborhood]
-  @restaurant.cuisines += get_cuisine(infopage)
-=end  
   end
   @user = User.find(params[:user_id])
   if params[:source][:name] == "New List"
@@ -172,19 +156,15 @@ end
 
 get '/delete/:rest_name' do 
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
-  #@source = Source.find_by(slug: params[:source_name])
   erb :delete
 end
 
 post '/delete/:rest_name' do #add source name back
-  #binding.pry
-  @restaurant = Restaurant.find_by(slug: params[:rest_name])
-  @source = Source.find_by(name: "Favorites")
-  #@source = Source.find_by(slug: params[:source_name])
+  @restaurant = Restaurant.find_by(slug: params[:rest_name]) #need to deal with mult. locations
   if params[:choice] == "total_delete"
     @restaurant.destroy
   else
-    @restaurant.sources.delete(@source)
+    @restaurant.sources.delete(params[:choice])
   end 
   redirect "/" #/source/#{@source.slug}"
 end
@@ -196,19 +176,28 @@ end
 
 post '/edit/:rest_name' do
   binding.pry
-  @restaurant = Restaurant.find_by(slug: params[:rest_name])
-  if params[:restaurant][:name] != @restaurant.name #look if restaurant is already in database
-    @duplicate_restaurant = Restaurant.find_by(name: params[:restaurant][:name])
-    if @duplicate_restaurant #if it is, just add sources
-      @duplicate_restaurant.sources.concat(@restaurant.sources)
-      @duplicate_restaurant.sources.uniq!
-      @restaurant.destroy
-      @restaurant = @duplicate_restaurant
-    end
-  else
-    @restaurant.update_attributes(params[:restaurant])
+  if params[:new_location] == "on"
+    @restaurant = Restaurant.create(params[:restaurant])
+    @restaurant.slug = @restaurant.menulink.match(/restaurants\/(.*)\/menu/)[1]
     @restaurant.fill
+    @restaurant.sources = Source.find(params[:sources].keys)
+  else
+    @restaurant = Restaurant.find_by(slug: params[:rest_name])
+    if params[:restaurant][:name] != @restaurant.name #look if restaurant is already in database
+      @duplicate_restaurant = Restaurant.find_by(name: params[:restaurant][:name])
+      if @duplicate_restaurant #if it is, just add sources
+        @duplicate_restaurant.sources.concat(@restaurant.sources)
+        @duplicate_restaurant.sources.uniq!
+        @restaurant.destroy
+        @restaurant = @duplicate_restaurant
+      end
+    else
+      @restaurant.update_attributes(params[:restaurant])
+      @restaurant.fill
+      @restaurant.sources = Source.find(params[:sources].keys)
+    end
   end
+  @restaurant.save
   redirect "/rest_page/#{@restaurant.slug}"
 end
 
@@ -233,14 +222,5 @@ get '/user_history/:user' do
 end
 
 
-
-
-
-
-get '/wtf/:rest_name/:source_name' do
-  @restaurant = Restaurant.find_by(name: params[:rest_name])
-  @source = Source.find_by(name: params[:source_name])
-  erb :test
-end
 
 

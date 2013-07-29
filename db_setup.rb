@@ -8,6 +8,7 @@ ActiveRecord::Base.establish_connection(
   :host => "localhost",
   :username => "root",
   #:password => "password",
+    #:checkout_timeout => 10,
   :database => "restaurantproject"
   )
 
@@ -157,24 +158,6 @@ class AddBadNamesToBase < ActiveRecord::Migration
 end
 
 
-
-@base = BaseSource.find_by(name: "Serious Eats")
-@base.bad_names = ["Comment Policy page","report an inappropriate comment."]
-p @base.bad_names
-@base.save
-
-=begin
-@bases = BaseSource.all
-binding.pry
-@bases.each do |b|
-
-  if b.name == "Eater"
-    b.bad_names.concat(["Eater Maps","Top","Has Map","Eater 38"])
-  elsif b.name == "Serious Eats"
-    b.bad_names.concat(["Comment Policy page","report an inappropriate comment."])
-  end
-end
-=end
 
 
 

@@ -4,13 +4,19 @@
   <title><%= @title %></title>
   <link href="/css/bootstrap.css" rel = "stylesheet">
   <link href="/css/bootstrap.min.css" rel = "stylesheet">
+  <!-- bootstrap widget theme only need this for a few pages.  Put it here?-->
+  <link rel="stylesheet" href="/css/theme.bootstrap.css">
 </head>
 <body style="padding-top: 50px">
 
   <script type="text/javascript" src="/js/jquery-1.10.2.js"></script>
   <script type="text/javascript" src="/js/bootstrap.js"></script>
-  <!-- works only WITHOUT min.js ??? -->
-
+   <!-- works only WITHOUT min.js ??? -->
+  <!-- tablesorter plugin -->
+  <script src="/js/jquery.tablesorter.js"></script>
+  <!-- tablesorter widget file - loaded after the plugin -->
+  <script src="/js/jquery.tablesorter.widgets.js"></script>
+   
 
   <div class="navbar navbar-fixed-top">
     <div class = "navbar-inner">
@@ -19,7 +25,7 @@
           Where to Eat?
         </a>
         <ul class="nav pull-right">
-          <li><a href="/log_visits">Log Visits</a></li>
+          <li><a href="/user_history/<%=@@user.id%>">My History</a></li>
           <li><a href="/entry">Add Restaurant</a></li>
           <li class="dropdown">
             <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Find By<b class="caret"></b></a>
