@@ -22,11 +22,11 @@ end
 
 helpers do
 
-  def login?
+  def login?  #not currently using
     !session[:email].nil?
   end
 
-  def username
+  def username #not currently using
     session[:email]
   end
 end
@@ -160,14 +160,14 @@ get '/rest_page/:rest_name' do
 end
 
 get '/rest_page' do 
-  @search_string = params[:rest_name]
-  @restaurant_list = Restaurant.where(name: @search_string)
+  @restaurant_list = Restaurant.where("name = ?", params[:rest_name])
   if @restaurant_list.size == 1
-    redirect "/rest_page/#{@search_string.to_url}"
+    redirect "/rest_page/#{@restaurant_list.first.slug}"
   else
-    @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
-    erb :list
+    @restaurant_list = Restaurant.where("name like ?","%params[:rest_name]%")
   end
+  @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
+  erb :list
 end
 
 get '/entry' do
