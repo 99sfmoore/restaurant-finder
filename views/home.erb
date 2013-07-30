@@ -2,7 +2,7 @@
 
 <h2>Restaurant Ideas</h2>
   <ul>
-    <% @sources.each do |source| %>
+    <% @public_sources.each do |source| %>
     <li><a href='/source/<%= source.slug %>'><%= source.name %></a></li>
     <% end %>
   </ul>
@@ -12,8 +12,8 @@
     <label for="base_source">Choose a method:</label>
     <select name = "base_id">
     <% @bases.each do |base| %>
-      <% unless base.name == @user.name %>
-      <option value = '<%= base.id %>'><%= base.name %></option>
+      <% if base.public_source %>
+        <option value = '<%= base.id %>'><%= base.name %></option>
       <% end %>
     <% end %>
   </select>

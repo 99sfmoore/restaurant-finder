@@ -25,28 +25,36 @@
           Where to Eat?
         </a>
         <ul class="nav pull-right">
-          <li><a href="/user_history/<%=@@user.id%>">My History</a></li>
+          <% if @user %>
+          <li><a href="/user_history"><%=@user.name%>'s History</a></li>
+          <% end %>
           <li><a href="/entry">Add Restaurant</a></li>
           <li class="dropdown">
             <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Find By<b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
               <li class="dropdown-submenu"><a tabindex="-1" href="#">Lists</a>
                 <ul class="dropdown-menu">
-                  <% @@source_list.each do |s| %>
+                  <% @public_sources.each do |s| %>
                   <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                  <% end %>
+                  <% if @user %>
+                    <li class="divider"></li>
+                    <% @personal_sources.each do |s| %>
+                    <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                    <% end %>
                   <% end %>
                 </ul>
               </li>
               <li class="dropdown-submenu"><a tabindex="-1" href="#">Cuisine</a>
                 <ul class="dropdown-menu">
-                  <% @@cuisine_list.each do |c| %>
+                  <% @cuisine_list.each do |c| %>
                   <li><a href="/cuisine/<%=c.slug%>"><%=c.name%></li>
                   <% end %>
                 </ul>
               </li>
               <li class="dropdown-submenu"><a tabindex="-1" href="#">Neighborhood</a>
                 <ul class="dropdown-menu">
-                  <% @@area_list.each do |a| %>
+                  <% @area_list.each do |a| %>
                     <li><a href="/area/<%= a %>"><%= a %></li>
                   <% end %>
                 </ul>
@@ -59,6 +67,18 @@
               <input type="text" class="search-query" name="rest_name" placeholder="Search by Restaurant Name">
               </form>
           </li>
+          <% if @user %>
+            <li><a href="/logout">Log out</a></li>
+          <% else %>
+            <li><a href="/signup">Sign up</a></li>
+            <li>
+              <form action = "/login" method ="post" class="navbar-search pull-left"> 
+                <input id="email" name="email" type="text" placeholder = "e-mail address" size = "10"><br>
+                <input id="password" name="password" type="password" placeholder= "password">
+                <input type="submit" value="Login"/>
+              </form>
+            </li>
+          <% end %>
         </ul>
       </div>
     </div>

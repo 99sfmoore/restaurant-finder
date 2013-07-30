@@ -1,18 +1,41 @@
-Debug dropdowns -- arrows are everyplace
 
-DONE!!! (But it's a mystery how) Sort by column headings
+Allow for searching with inexact matches
+
+Cuisines must be unique
+  have fixed in display, but not in actual DB
+
+Ensure that Source Names are unique
+
+Make scrape routines belong to BaseSource objects
+  Larger object refactoring
 
 Narrow within lists
 
-Allow for multiple locations of restaurants w/ same name
+Add arrows to lists for sorting
 
 Deal with Users
-  Logins????
+  DONE!!! Logins
+  Friends???
+  Manage Lists
+
+Lists sorted by public, private, joint
 
 Deal with Notes
 
 Deal with History
   Format dates correctly
+
+Deal with format of restaurant page itself
+  Add features
+    DONE!! - make items links
+    Map
+    other links (Times Review, Yelp, etc.)
+
+Debug dropdowns -- arrows are everyplace
+
+More attractive CSS
+
+Try to thread scraping -- tried & failed.  DB timeout issue
 
 DONE !!!After loading source
   Have checkboxes for is this good?
@@ -20,11 +43,18 @@ DONE !!!After loading source
 
 DONE !!! Added other SE scraper
 
-Deal with format of restaurant page itself
-  Add features
-    DONE!! - make items links
-    Map
-    other links (Times Review, Yelp, etc.)
+DONE!!! (But it's a mystery how) Sort by column headings
+
+DONE!!! Allow for multiple locations of restaurants w/ same name 
+
+DONE!!! Distinguish between public & private BaseSources
+
+
+
+
+
+
+
 
 
 Questions
@@ -37,7 +67,5 @@ Questions
   ActiveRecord validations
 
   Is it worth "metaprogramming" routes?
-
-  How do the @@variables automatically update?
 
   Way to speed up loading, have it happen in background, threads?!?!

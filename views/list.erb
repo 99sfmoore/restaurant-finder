@@ -16,7 +16,7 @@
     <tr>
       <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
       <td>
-        <% rest.cuisines.each do |cuisine| %>
+        <% rest.cuisines.uniq.each do |cuisine| %>
           <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
           <br>
         <% end %>
@@ -26,7 +26,7 @@
       <% end %>
       <td>
         <% rest.sources.each do |source| %>
-          <% unless source.name == @title %>
+          <% if @source_list.include?(source) && source.name != @title  %>
             <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
           <% end %>
         <% end %>
@@ -37,7 +37,7 @@
     <% end %>
   </tbody>
   </table>
-  
+
 <script>
   $(function(){
   $("#list_table").tablesorter();

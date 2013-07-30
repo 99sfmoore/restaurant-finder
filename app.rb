@@ -4,28 +4,77 @@ require './setup.rb'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 require 'pry-nav'  #use with binding.pry at debugging point
+require 'bcrypt'
 
 
+enable :sessions 
 
-#set :database, "mysql:///restaurantproject.db"
 
-#enable :sessions #what does this do?? DB???
-
-configure do
- @@cuisine_list = Cuisine.order(:name)
- @@area_list = Restaurant.all.map{|r| r.area}.compact.uniq.sort
- @@source_list = Source.order(:name)
- @@user = User.find_by(name: "Sarah")
+#this whole thing is weird
+before do
+ @cuisine_list = Cuisine.order(:name)
+ @area_list = Restaurant.all.map{|r| r.area}.compact.uniq.sort
+ @user = User.find_by(email: session[:email])
+ @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
+ @personal_sources = @user.base_source.sources if @user
+ @source_list = @public_sources.concat(@personal_sources || [])
 end
+
+helpers do
+
+  def login?
+    !session[:email].nil?
+  end
+
+  def username
+    session[:email]
+  end
+end
+     
 
 
 get '/' do
-  @title = "Restaurant List"
-  @sources = Source.all
-  @bases = BaseSource.all
-  @user = User.find_by(name: "Sarah") # fix this later
-  erb :home
+    @title = "Restaurant List"
+    @sources = Source.all
+    @bases = BaseSource.all
+    erb :home
 end
+
+get '/signup' do
+  erb :signup
+end
+
+post '/signup' do
+  password_salt = BCrypt::Engine.generate_salt
+  password_hash = BCrypt::Engine.hash_secret(params[:password], password_salt)
+  User.create(  name: params[:name],
+                email: params[:email],
+                salt: password_salt,
+                passwordhash: password_hash,
+                base_source: BaseSource.create(name: params[:email])
+                )
+  session[:email] = params[:email]
+  redirect '/'
+end
+
+get '/login' do
+  erb :login
+end
+
+post '/login' do
+  @user = User.find_by(email: params[:email])
+  if @user && @user.passwordhash == BCrypt::Engine.hash_secret(params[:password],@user.salt)
+    session[:email] = params[:email]
+    redirect "/"
+  end
+  erb :error
+end
+
+get '/logout' do 
+  session[:email] = nil
+  redirect '/'
+end
+
 
 get '/all' do
   @title = "All Restaurants"
@@ -124,18 +173,16 @@ end
 get '/entry' do
   @title = "New Entry"
   @restaurant = Restaurant.new
-  @user = User.find_by(name: "Sarah") #fix this
   erb :create_entry
 end
 
-post '/entry/:user_id' do
+post '/entry' do
   @restaurant = Restaurant.find_by(params[:restaurant])
   unless @restaurant
     @restaurant = Restaurant.create(params[:restaurant])
     @restaurant.menulink = menulink(@restaurant.name)
     @restaurant.fill
   end
-  @user = User.find(params[:user_id])
   if params[:source][:name] == "New List"
     @source = Source.create(params[:new_source])
     @source.slug = @source.name.to_url
@@ -175,7 +222,6 @@ get '/edit/:rest_name' do
 end  
 
 post '/edit/:rest_name' do
-  binding.pry
   if params[:new_location] == "on"
     @restaurant = Restaurant.create(params[:restaurant])
     @restaurant.slug = @restaurant.menulink.match(/restaurants\/(.*)\/menu/)[1]
@@ -202,20 +248,17 @@ post '/edit/:rest_name' do
 end
 
 get '/log-visit/:rest' do #not using this yet
-  @user = User.find_by(name: "Sarah") #fix this
   @restaurant = Restaurant.find_by(slug: params[:rest])
   erb :log_visit
 end
 
 post '/log-visit' do
-  @user = User.find(params[:user])
   @visit = Visit.create(params[:visit])
   @user.visits << @visit
-  redirect "/user_history/#{@user.id}"
+  redirect "/user_history"
 end
 
-get '/user_history/:user' do
-  @user = User.find(params[:user])
+get '/user_history' do
   @history = @user.visits
   @title = "#{@user.name}'s History"
   erb :history

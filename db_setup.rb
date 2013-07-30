@@ -2,13 +2,14 @@ require 'active_record'
 require 'mysql2'
 require 'stringex'
 require 'pry-nav'
+require 'bcrypt'
 
 ActiveRecord::Base.establish_connection(
   :adapter => "mysql2",
   :host => "localhost",
   :username => "root",
   #:password => "password",
-    #:checkout_timeout => 10,
+  #:checkout_timeout => 10,
   :database => "restaurantproject"
   )
 
@@ -27,7 +28,7 @@ class Restaurant < ActiveRecord::Base
                               :cross_street => get_cross_street(infopage),
                               :area => nhood_info[:area],
                               :neighborhood => nhood_info[:neighborhood] })
-      cuisines.concat(get_cuisine(infopage)) #is this correct?
+      cuisines.concat(get_cuisine(infopage)).uniq! #is this correct?
     end
   end
 end
@@ -53,6 +54,10 @@ class Source < ActiveRecord::Base
   belongs_to :base_source
   has_and_belongs_to_many :restaurants
   has_one :note
+
+  def public?
+    base_source.public_source
+  end
 end
 
 class Cuisine < ActiveRecord::Base
@@ -149,7 +154,7 @@ end
 
 class AddBadNamesToBase < ActiveRecord::Migration
   def up
-    add_column :base_sources, :bad_names, :text
+    add_column :base_sources, :bad_names, :text  #string or text??
   end
 
   def down
@@ -157,9 +162,36 @@ class AddBadNamesToBase < ActiveRecord::Migration
   end
 end
 
+class AddAuthenticationToUser < ActiveRecord::Migration
+  def up
+    add_column :users, :email, :string  #string or text???
+    add_column :users, :salt, :string
+    add_column :users, :passwordhash, :string
+  end
 
+  def down
+    remove_column :users, :email
+    remove_column :users, :salt
+    remove_column :users, :passwordhash
+  end
+end
 
+class AddPublicToBaseSource < ActiveRecord::Migration
+  def up
+    add_column :base_sources, :public, :boolean
+  end
 
+  def down
+    remove_column :base_sources, :public
+  end
+end
+
+class RenamePublic < ActiveRecord::Migration
+  def up
+    rename_column :base_sources, :public, :public_source
+  end
+ end
+ 
 
 =begin
   
