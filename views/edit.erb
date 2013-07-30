@@ -11,8 +11,8 @@
     <label for="restaurant[menulink]">New Link:</label>
     <input id="restaurant[menulink]" name="restaurant[menulink]" type="text" value="<%=@restaurant.menulink || ""%>" size="10">
     <br>
-    Included in lists:
-    <% @@source_list.each do |source| %>
+    Include in lists:
+    <% @personal_sources.each do |source| %>
     <label for="<%= source.id %>"><%=source.name %></label>
     <input id="<%= source.id %>" name="sources[<%=source.id%>]" type="checkbox" 
     <%if @restaurant.sources.include?(source)%>

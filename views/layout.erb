@@ -27,8 +27,8 @@
         <ul class="nav pull-right">
           <% if @user %>
           <li><a href="/user_history"><%=@user.name%>'s History</a></li>
-          <% end %>
           <li><a href="/entry">Add Restaurant</a></li>
+          <% end %>
           <li class="dropdown">
             <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Find By<b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -69,15 +69,6 @@
           </li>
           <% if @user %>
             <li><a href="/logout">Log out</a></li>
-          <% else %>
-            <li><a href="/signup">Sign up</a></li>
-            <li>
-              <form action = "/login" method ="post" class="navbar-search pull-left"> 
-                <input id="email" name="email" type="text" placeholder = "e-mail address" size = "10"><br>
-                <input id="password" name="password" type="password" placeholder= "password">
-                <input type="submit" value="Login"/>
-              </form>
-            </li>
           <% end %>
         </ul>
       </div>

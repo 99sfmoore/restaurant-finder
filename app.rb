@@ -17,7 +17,7 @@ before do
  @user = User.find_by(email: session[:email])
  @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
  @personal_sources = @user.base_source.sources if @user
- @source_list = @public_sources.concat(@personal_sources || [])
+ @source_list = @public_sources + (@personal_sources || [])
 end
 
 helpers do
@@ -34,26 +34,30 @@ end
 
 
 get '/' do
+  if @user
     @title = "Restaurant List"
-    @sources = Source.all
-    @bases = BaseSource.all
+    @sources = Source.all #do I need this??
+    @bases = BaseSource.all  #do I need this??
     erb :home
-end
-
-get '/signup' do
-  erb :signup
+  else
+    erb :login
+  end
 end
 
 post '/signup' do
-  password_salt = BCrypt::Engine.generate_salt
-  password_hash = BCrypt::Engine.hash_secret(params[:password], password_salt)
-  User.create(  name: params[:name],
-                email: params[:email],
-                salt: password_salt,
-                passwordhash: password_hash,
-                base_source: BaseSource.create(name: params[:email])
-                )
-  session[:email] = params[:email]
+  if params[:password] != params[:confirm]
+    redirect "/" #add message
+  else
+    password_salt = BCrypt::Engine.generate_salt
+    password_hash = BCrypt::Engine.hash_secret(params[:password], password_salt)
+    User.create(  name: params[:name],
+                  email: params[:email],
+                  salt: password_salt,
+                  passwordhash: password_hash,
+                  base_source: BaseSource.create(name: params[:email])
+                  )
+    session[:email] = params[:email]
+  end
   redirect '/'
 end
 
@@ -160,11 +164,12 @@ get '/rest_page/:rest_name' do
 end
 
 get '/rest_page' do 
-  @restaurant_list = Restaurant.where("name = ?", params[:rest_name])
+  @search_string = params[:rest_name]
+  @restaurant_list = Restaurant.where("name = ?", @search_string)
   if @restaurant_list.size == 1
     redirect "/rest_page/#{@restaurant_list.first.slug}"
   else
-    @restaurant_list = Restaurant.where("name like ?","%params[:rest_name]%")
+    @restaurant_list = Restaurant.where("name like ?","%#{@search_string}%")
   end
   @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
   erb :list
@@ -177,29 +182,36 @@ get '/entry' do
 end
 
 post '/entry' do
-  @restaurant = Restaurant.find_by(params[:restaurant])
-  unless @restaurant
-    @restaurant = Restaurant.create(params[:restaurant])
-    @restaurant.menulink = menulink(@restaurant.name)
-    @restaurant.fill
-  end
-  if params[:source][:name] == "New List"
-    @source = Source.create(params[:new_source])
-    @source.slug = @source.name.to_url
-    @user.base_source.sources << @source
-    @user.save
-  else
+  if params[:source][:id] == "New List"
+    @source = Source.create(name: params[:new_source_name])
+      @source.slug = "#{@source.name}-#{@user.id}".to_url
+      @user.base_source.sources << @source
+      @user.save
+  else 
     @source = Source.find_by(params[:source])
   end
-  @restaurant.sources << @source
-  @restaurant.save
-  redirect to "/source/#{@source.slug}"
+  @restaurant_list = []
+  params[:restaurant].values.each do |name|
+    if name != ""
+      @restaurant = Restaurant.find_by(name: name)
+      unless @restaurant
+        @restaurant = Restaurant.create(name: name)
+        @restaurant.menulink = menulink(@restaurant.name)
+        @restaurant.fill
+      end
+      @restaurant.sources << @source if @source
+      @restaurant.save
+      @restaurant_list << @restaurant
+    end
+  end
+  erb :check_entry
+end
   #if @restaurant.save
   #  redirect "/source/#{@source.name}", :notice => "Restaurant Added"
   #else
   #  redirect "/entry", :error => "Something went wrong"
   #end
-end
+
 
 get '/delete/:rest_name' do 
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
@@ -225,24 +237,12 @@ post '/edit/:rest_name' do
   if params[:new_location] == "on"
     @restaurant = Restaurant.create(params[:restaurant])
     @restaurant.slug = @restaurant.menulink.match(/restaurants\/(.*)\/menu/)[1]
-    @restaurant.fill
-    @restaurant.sources = Source.find(params[:sources].keys)
   else
     @restaurant = Restaurant.find_by(slug: params[:rest_name])
-    if params[:restaurant][:name] != @restaurant.name #look if restaurant is already in database
-      @duplicate_restaurant = Restaurant.find_by(name: params[:restaurant][:name])
-      if @duplicate_restaurant #if it is, just add sources
-        @duplicate_restaurant.sources.concat(@restaurant.sources)
-        @duplicate_restaurant.sources.uniq!
-        @restaurant.destroy
-        @restaurant = @duplicate_restaurant
-      end
-    else
-      @restaurant.update_attributes(params[:restaurant])
-      @restaurant.fill
-      @restaurant.sources = Source.find(params[:sources].keys)
-    end
+    @restaurant.update_attributes(params[:restaurant])
   end
+  @restaurant.fill
+  @restaurant.sources = Source.find(params[:sources].keys)
   @restaurant.save
   redirect "/rest_page/#{@restaurant.slug}"
 end
