@@ -1,4 +1,3 @@
-require './db_setup'
 require 'nokogiri'
 require 'net/http'
 require 'open-uri'

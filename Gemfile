@@ -7,5 +7,6 @@ gem 'activerecord'
 gem 'mysql2'
 gem 'stringex'
 gem 'nokogiri'
+gem 'rake'
 
 gem 'pry-nav'

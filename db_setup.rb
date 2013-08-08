@@ -4,67 +4,6 @@ require 'stringex'
 require 'pry-nav'
 require 'bcrypt'
 
-ActiveRecord::Base.establish_connection(
-  :adapter => "mysql2",
-  :host => "localhost",
-  :username => "root",
-  #:password => "password",
-  #:checkout_timeout => 10,
-  :database => "restaurantproject"
-  )
-
-class Restaurant < ActiveRecord::Base
-  has_and_belongs_to_many :sources
-  has_and_belongs_to_many :cuisines
-  #has_and_belongs_to_many :notes
-  has_many :visits
-
-  def fill
-    Restaurant.update(id, {:slug => name.to_url})
-    if test_link(menulink)
-      infopage = Nokogiri::HTML(open(menulink))
-      nhood_info = get_neighborhood(infopage)
-      Restaurant.update(id, { :address => get_address(infopage), 
-                              :cross_street => get_cross_street(infopage),
-                              :area => nhood_info[:area],
-                              :neighborhood => nhood_info[:neighborhood] })
-      cuisines.concat(get_cuisine(infopage)).uniq! #is this correct?
-    end
-  end
-end
-
-class User < ActiveRecord::Base
-  has_and_belongs_to_many :visits
-  belongs_to :base_source
-  #has_and_belongs_to_many :notes
-end
-
-class Visit < ActiveRecord::Base
-  belongs_to :restaurant
-  has_and_belongs_to_many :users
-  #has_and_belongs_to_many :notes
-end
-
-class BaseSource < ActiveRecord::Base
-  has_many :sources
-  serialize :bad_names, Array
-end
-
-class Source < ActiveRecord::Base
-  belongs_to :base_source
-  has_and_belongs_to_many :restaurants
-  has_one :note
-
-  def public?
-    base_source.public_source
-  end
-end
-
-class Cuisine < ActiveRecord::Base
-  has_and_belongs_to_many :restaurants 
-end
-
-
 def make_database # I think I only have to do this once
   ActiveRecord::Migration.create_table :base_sources do |t|
     t.string :name

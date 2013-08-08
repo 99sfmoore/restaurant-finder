@@ -2,15 +2,16 @@ require 'bundler/setup'
 
 require 'sinatra'
 require 'sinatra/activerecord'
-require './setup.rb'
-require 'sinatra/flash'
-require 'sinatra/redirect_with_flash'
 require 'pry-nav'  #use with binding.pry at debugging point
 require 'bcrypt'
+
+require './setup'
+require './models'
 
 
 enable :sessions 
 
+set :database, "mysql2://root@localhost/restaurantproject"
 
 #this whole thing is weird
 before do
