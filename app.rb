@@ -1,3 +1,5 @@
+require 'bundler/setup'
+
 require 'sinatra'
 require 'sinatra/activerecord'
 require './setup.rb'
