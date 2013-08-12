@@ -55,10 +55,11 @@
               <li class="dropdown-submenu"><a tabindex="-1" href="#">Neighborhood</a>
                 <ul class="dropdown-menu">
                   <% @area_list.each do |a| %>
-                    <li><a href="/area/<%= a %>"><%= a %></li>
+                    <li><a href="/area/<%= a.id %>"><%= a.name %></li>
                   <% end %>
                 </ul>
               </li>
+              <li><a tabindex="-1" href="/custom">Custom Search</a></li>
               <li class="divider"></li>
               <li><a tabindex="-1" href="/all">All Restaurants</a></li>
             </ul>

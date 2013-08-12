@@ -1,13 +1,11 @@
 
-Allow for searching with inexact matches
-
 Cuisines must be unique
   have fixed in display, but not in actual DB
 
-Ensure that Source Names are unique
-
 Make scrape routines belong to BaseSource objects
   Larger object refactoring
+
+Logins persist
 
 Narrow within lists
 
@@ -15,10 +13,9 @@ Add arrows to lists for sorting
 
 Deal with Users
   DONE!!! Logins
-  Friends???
   Manage Lists
 
-Lists sorted by public, private, joint
+Allow for joint lists
 
 Deal with Notes
 
@@ -49,6 +46,13 @@ DONE!!! Allow for multiple locations of restaurants w/ same name
 
 DONE!!! Distinguish between public & private BaseSources
 
+DONE!!! Allow for searching with inexact matches
+
+DONE!!! Ensure that Source Names are unique
+
+DONE!!! Lists sorted by public, private, 
+
+
 
 
 
@@ -69,3 +73,5 @@ Questions
   Is it worth "metaprogramming" routes?
 
   Way to speed up loading, have it happen in background, threads?!?!
+
+  correct datatypes for Database columns

@@ -1,0 +1,8 @@
+<h2>You searched for: <%=@search_string%></h2>
+
+<%@possibilities.each do |p| %>
+  <a href="/rest_page/<%=p.slug%>"><%=p.name%></a>
+  <%end%>
+
+
+  

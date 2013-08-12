@@ -1,39 +1,46 @@
 
 <h2><%= @title %></h2>
-<form action = "/correct-source/<%=@source.slug%>" method = "post">
-  <label for="delete_button">Check any items in the list that should not have been imported(i.e. not restaurants)</label>
-  <input id="delete_button" type="submit" value="Delete">
-  <table>
+
+  <table> 
+    <thead>
     <tr>
       <% @headers.each do |head| %>
         <th><%= head %></th>
       <% end %>
     </tr>
+  </thead>
+  <tbody>
+  <form action="/update-links"
     <% @restaurant_list.each do |rest| %>
     <tr>
-      <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
+      <td><%=rest.name %></td>
       <td>
-        <% rest.cuisines.each do |cuisine| %>
+        <% rest.cuisines.uniq.each do |cuisine| %>
           <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
           <br>
         <% end %>
       </td>
       <% if @headers.include?("Neighborhood") %>
-        <td><% if rest.neighborhood %>
+        <td><%if rest.neighborhood %>
           <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
-            <% end %></td>
+            <%end%></td>
       <% end %>
       <td>
         <% rest.sources.each do |source| %>
-          <% unless source.name == @title %>
+          <% if @source_list.include?(source) && source.name != @title  %>
             <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
           <% end %>
         <% end %>
       </td>
       <td><%= rest.notes %></td>  
-      <td><input type="checkbox" name="<%=rest.id%>"></td> 
+      <td><a href = '/edit/<%=rest.slug%>'>Edit</a></td>
+      <td><a href = '/delete/<%=rest.slug%>'>Delete</a></td>  
     <% end %>
-    
+  </tbody>
   </table>
-  <input type="submit" value="Delete">
-</form>
+
+<script>
+  $(function(){
+  $("#list_table").tablesorter();
+  });
+</script>

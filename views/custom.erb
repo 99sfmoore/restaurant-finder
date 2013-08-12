@@ -1,0 +1,12 @@
+<h3>Search: </h3>
+
+<form action = "/custom" method = "post">
+  <% @search_lists.each do |type, items| %>
+    <h4>Choose <%=type%>:<h4>
+      <% items.each do |item| %>
+        <input type ="checkbox" name=<%="#{type}[#{item.id}]"%>>
+        <%=item.name%>
+      <%end%>
+  <% end %>
+  <input type="submit" value="Search">
+</form>

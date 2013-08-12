@@ -3,7 +3,9 @@
 
 <h4><%= @restaurant.address %>
   <br><%= @restaurant.cross_street %>
-  <br><a href="/area/<%=@restaurant.area%>"><%= @restaurant.area %></a> / <a href="/neighborhood/<%= @restaurant.neighborhood %>"><%= @restaurant.neighborhood %></a>
+  <% if @restaurant.neighborhood %>
+    <br><a href="/area/<%=@restaurant.neighborhood.area.id%>"><%= @restaurant.neighborhood.area.name %></a> / <a href="/neighborhood/<%= @restaurant.neighborhood.id %>"><%= @restaurant.neighborhood.name %></a>
+  <%end%>
   <% @restaurant.cuisines.uniq.each do |cuisine| %>
     <br><a href="/cuisine/<%=cuisine.slug%>"><%=cuisine.name%></a>
     <%end%></h4>

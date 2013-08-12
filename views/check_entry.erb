@@ -1,0 +1,31 @@
+
+<h2>Confirming additions <%if @source %><%= "to #{@source.name}" %><% end %>
+Supply new menulink if incorrect location or not available</h2>
+  <table>
+    <tr>
+      <% @headers.each do |head| %>
+        <th><%= head %></th>
+      <% end %>
+    </tr>
+  <form action="/edit-list" method ="post">
+    <input type="hidden" name="source" value="<%=@source.id%>">
+    <% @restaurant_list.each do |rest| %>
+    <tr>
+      <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
+      <td>
+        <% rest.cuisines.uniq.each do |cuisine| %>
+          <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
+          <br>
+        <% end %>
+      </td>
+      <% if @headers.include?("Neighborhood") %>
+        <td><%if rest.neighborhood %>
+          <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
+          <%end%></td>
+      <% end %>
+      <td><input type="text" name="links[<%=rest.id%>]"></td>
+    <% end %>
+  </table>
+  <input type="submit" value="Edit/Confirm">
+</form>
+

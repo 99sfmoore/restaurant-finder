@@ -2,21 +2,21 @@ require 'bundler/setup'
 
 require 'sinatra'
 require 'sinatra/activerecord'
-require 'pry-nav'  #use with binding.pry at debugging point
+require 'pry-nav'  
 require 'bcrypt'
+require 'stringex'
 
-require './setup'
 require './models'
 
 
 enable :sessions 
 
-set :database, "mysql2://root@localhost/restaurantproject"
+set :database, "mysql2://root@localhost/restaurantproject2"
 
 #this whole thing is weird
 before do
  @cuisine_list = Cuisine.order(:name)
- @area_list = Restaurant.all.map{|r| r.area}.compact.uniq.sort
+ @area_list = Area.order(:name)
  @user = User.find_by(email: session[:email])
  @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
  @personal_sources = @user.base_source.sources if @user
@@ -90,24 +90,6 @@ get '/all' do
   erb :list
 end
 
-get '/source/new/:source' do
-  @source = Source.find_by(:slug => params[:source])
-  @restaurant_list = @source.restaurants.order(:name)
-  @title = @source.name
-  @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes","Delete"]
-  erb :correct_source
-end
-
-post '/correct-source/:source' do
-  @source = Source.find_by(slug: params[:source])
-  @base_source = @source.base_source
-  @rest_ids_to_delete = params.select{|k,v| v == "on"}.keys
-  @errors = Restaurant.find(@rest_ids_to_delete).map{|r| r.name}
-  @base_source.bad_names.concat(@errors)
-  @base_source.save
-  Restaurant.delete(@rest_ids_to_delete)
-  redirect "/source/#{@source.slug}"
-end
 
 
 get '/source/:source' do
@@ -127,31 +109,145 @@ get '/cuisine/:cuisine' do
 end
 
 get '/neighborhood/:neighborhood' do
-  @neighborhood_name = params[:neighborhood]
-  #binding.pry
-  @restaurant_list = Restaurant.where("neighborhood = ?", @neighborhood_name).order(:name)
-  @title = @neighborhood_name
+  @neighborhood = Neighborhood.find(params[:neighborhood])
+   
+  @restaurant_list = @neighborhood.restaurants.order(:name)
+  @title = @neighborhood.name
   @headers = ["Name","Cuisine","Lists","Notes"]
-  @area = @restaurant_list.first.area
   erb :list
 end
 
 get '/area/:area' do
-  @area_name = params[:area]
-  @restaurant_list = Restaurant.where("area = ?", @area_name)
-  @title = @area_name
+   
+  @area = Area.find(params[:area])
+  @restaurant_list = []
+  @area.neighborhoods.each do |neigh|
+    @restaurant_list.concat(neigh.restaurants)
+  end
+  @title = @area.name
   @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
   erb :list
 end
 
+get '/custom' do
+  @search_lists = { "Lists" => @source_list,
+                    "Cuisines" => @cuisine_list,
+                    "Areas" => @area_list}
+  erb :custom
+end
+
+post '/custom' do
+  @restaurant_list = []
+
+  if params["Lists"] 
+    @sources = Source.find(params["Lists"].keys)
+    @source_find = []
+    @sources.each do |s|
+      @source_find.concat(s.restaurants).uniq!
+    end
+  else
+    @source_find = Restaurant.all
+  end
+
+  if params["Cuisines"] 
+    @cuisines = Cuisine.find(params["Cuisines"].keys)
+    @cuisine_find = []
+    @cuisines.each do |c|
+      @cuisine_find.concat(c.restaurants).uniq!
+    end
+  else
+    @cuisine_find = @source_find
+  end
+  
+  if params["Areas"] 
+    @areas = Area.find(params["Areas"].keys)
+    @area_find = []
+    @areas.each do |a|
+      a.neighborhoods.each do |n|
+        @area_find.concat(n.restaurants).uniq!
+      end
+    end
+  else
+    @area_find = @cuisine_find
+  end
+  @restaurant_list = @source_find & @cuisine_find & @area_find  
+  @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
+  erb :list
+end
+
+#automatic loading of list from website
 post '/load_source' do
   @base = BaseSource.find(params[:base_id])
   @source = Source.create(params[:source])
   @source.slug = @source.name.to_url
   @source.save # do I need this?
   @base.sources << @source
-  fill_from(@source) 
-  redirect "/source/new/#{@source.slug}"
+  @source.fill_from(@source.scrape)
+  @restaurant_list = @source.restaurants.order(:name)
+  @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes","Delete"]
+  erb :correct_source
+end
+
+#delete incorrectly loaded items
+# get '/source/new/:source' do
+#   @source = Source.find_by(:slug => params[:source])
+#   @restaurant_list = @source.restaurants.order(:name)
+#   @title = @source.name
+#   @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes","Delete"]
+#   erb :correct_source
+# end
+
+#delete incorrectly loaded items
+post '/correct-source/:source' do
+  @source = Source.find_by(slug: params[:source])
+  @base_source = @source.base_source
+  @rest_ids_to_delete = params.select{|k,v| v == "on"}.keys
+  @errors = Restaurant.find(@rest_ids_to_delete).map{|r| r.name}
+  @base_source.bad_names.concat(@errors)
+  @base_source.save
+  Restaurant.delete(@rest_ids_to_delete)
+  @restaurant_list = @source.restaurants
+  @headers = ["Name","Cuisine","Neighborhood","New Menulink"]
+  erb :check_entry
+end
+
+#allow user to enter own lists
+get '/entry' do
+  @title = "New Entry"
+  @restaurant = Restaurant.new
+  erb :create_entry
+end
+
+#fill from user-generated list
+post '/entry' do
+  if params[:source][:id] == "New List"
+    @source = Source.create(name: params[:new_source_name])
+      @source.slug = "#{@source.name}-#{@user.id}".to_url
+      @user.base_source.sources << @source
+      @user.save
+  else 
+    @source = Source.find_by(params[:source])
+  end
+  name_list = params[:restaurant].values.reject{|x| x==""}
+  @restaurant_list = @source.fill_from(name_list)
+  @headers = ["Name","Cuisine","Neighborhood","New Menulink"]
+  erb :check_entry
+end
+
+
+
+#updates menulinks to user-generated links
+post '/edit-list' do
+  @source = Source.find(params[:source])
+  params[:links].each do |id,link|
+    unless link == ""
+      restaurant = Restaurant.find(id)
+      restaurant.update_attributes(menulink: link)
+      restaurant.fill
+      restaurant.save #do I need this
+    end
+  end
+  redirect "/source/#{@source.slug}"
 end
 
 get '/rest_page/:rest_name' do
@@ -159,7 +255,7 @@ get '/rest_page/:rest_name' do
   @restaurant = Restaurant.find_by(slug: @slug)
   if @restaurant
     @title = @restaurant.name
-    @menu = get_menu(@restaurant.menulink)
+    @menu = @restaurant.get_menu
     erb :rest_page
   else
     erb :not_found
@@ -177,45 +273,7 @@ get '/rest_page' do
   @headers = ["Name","Cuisine","Neighborhood","Lists","Notes"]
   erb :list
 end
-
-get '/entry' do
-  @title = "New Entry"
-  @restaurant = Restaurant.new
-  erb :create_entry
-end
-
-post '/entry' do
-  if params[:source][:id] == "New List"
-    @source = Source.create(name: params[:new_source_name])
-      @source.slug = "#{@source.name}-#{@user.id}".to_url
-      @user.base_source.sources << @source
-      @user.save
-  else 
-    @source = Source.find_by(params[:source])
-  end
-  @restaurant_list = []
-  params[:restaurant].values.each do |name|
-    if name != ""
-      @restaurant = Restaurant.find_by(name: name)
-      unless @restaurant
-        @restaurant = Restaurant.create(name: name)
-        @restaurant.menulink = menulink(@restaurant.name)
-        @restaurant.fill
-      end
-      @restaurant.sources << @source if @source
-      @restaurant.save
-      @restaurant_list << @restaurant
-    end
-  end
-  erb :check_entry
-end
-  #if @restaurant.save
-  #  redirect "/source/#{@source.name}", :notice => "Restaurant Added"
-  #else
-  #  redirect "/entry", :error => "Something went wrong"
-  #end
-
-
+ 
 get '/delete/:rest_name' do 
   @restaurant = Restaurant.find_by(slug: params[:rest_name])
   erb :delete
@@ -245,10 +303,11 @@ post '/edit/:rest_name' do
     @restaurant.update_attributes(params[:restaurant])
   end
   @restaurant.fill
-  @restaurant.sources = Source.find(params[:sources].keys)
+  @restaurant.sources = (@restaurant.sources.select{|s| @public_sources.include?(s)}||[]) + (params[:sources] ? Source.find(params[:sources].keys) : [])
   @restaurant.save
   redirect "/rest_page/#{@restaurant.slug}"
 end
+
 
 get '/log-visit/:rest' do #not using this yet
   @restaurant = Restaurant.find_by(slug: params[:rest])
