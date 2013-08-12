@@ -326,6 +326,19 @@ get '/user_history' do
   erb :history
 end
 
+get '/find-friends' do
+  erb :find_friends
+end
+
+post '/find-friends' do
+  @friend_list = User.where(email: params[:email].values)
+  @friend_list.each do |friend|
+    # add invite from @user
+  end
+  erb :friends_found
+end
+
+
 
 
 
