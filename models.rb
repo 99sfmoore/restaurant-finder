@@ -61,8 +61,17 @@ end
 class User < ActiveRecord::Base
   has_and_belongs_to_many :visits
   belongs_to :base_source
+  has_many :friendships
+  has_many :friends, through: :friendships
   #has_and_belongs_to_many :notes
 end
+
+class Friendship < ActiveRecord::Base
+  belongs_to :user
+  belongs_to :friend, class_name: 'User'
+  
+end
+
 
 class Visit < ActiveRecord::Base
   belongs_to :restaurant

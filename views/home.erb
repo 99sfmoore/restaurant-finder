@@ -1,3 +1,16 @@
+<% if @friend_requests.size > 0 %>
+  <h2>Friend Requests</h2>
+  You've been friended by:
+  <form action = '/accept-friendship' method = "post">
+    <ul>
+      <% @friend_requests.each do |fship| %>
+      <li><label for="<%=fship.id%>"><%=fship.friend.name%></label>
+          <input id="<%=fship.id%>" type = "checkbox" name="friendship[<%=fship.id%>]">
+      </li>
+      <% end %>
+    <ul><input type="submit" value="Accept Friend Requests"></ul>
+  </form>
+<% end %>
 
 
 <h2>Restaurant Ideas</h2>

@@ -41,6 +41,7 @@ get '/' do
     @title = "Restaurant List"
     @sources = Source.all #do I need this??
     @bases = BaseSource.all  #do I need this??
+    @friend_requests = @user.friendships.where("status = ?","respond")
     erb :home
   else
     erb :login
@@ -333,9 +334,18 @@ end
 post '/find-friends' do
   @friend_list = User.where(email: params[:email].values)
   @friend_list.each do |friend|
-    # add invite from @user
+    Friendship.create(user_id: @user.id, friend_id: friend.id, status: "waiting")
+    Friendship.create(user_id: friend.id, friend_id: @user.id, status: "respond")
   end
   erb :friends_found
+end
+
+post '/accept-friendship' do
+  @friend_list = Friendship.find(params[:friendship].keys)
+  @friend_list.each do |fship|
+    fship.update_attributes(status: "mutual")
+  end
+  redirect '/'
 end
 
 

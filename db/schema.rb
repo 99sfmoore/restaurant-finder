@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130809211106) do
+ActiveRecord::Schema.define(version: 20130813030900) do
 
   create_table "areas", force: true do |t|
     t.string "name"
@@ -31,6 +31,12 @@ ActiveRecord::Schema.define(version: 20130809211106) do
   create_table "cuisines_restaurants", id: false, force: true do |t|
     t.integer "cuisine_id",    null: false
     t.integer "restaurant_id", null: false
+  end
+
+  create_table "friendships", force: true do |t|
+    t.integer "user_id"
+    t.integer "friend_id"
+    t.string  "status"
   end
 
   create_table "neighborhoods", force: true do |t|
