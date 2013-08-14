@@ -6,17 +6,23 @@
       <td>Friend</td>
       <td>Shared List</td>
       <td>Joint List</td>
+      <td>No Permssions</td>
     </th>
     <% @user.friend_list.each do |friend| %>
       <tr>
         <td><%=friend.name%></td>
-        <td><input type="checkbox" name="shared[<%=friend.id%>]"
+        <td><input type="radio" name="friends[<%=friend.id%>]" value = "shared"
               <% if friend.shared_lists.include?(@source)  %>
               checked
               <%end%> >
         </td>
-        <td><input type="checkbox" name="joint[<%=friend.id%>]"
-            <% if friend.joint_lists.include?(@source)  %>
+        <td><input type="radio" name="friends[<%=friend.id%>]" value = "joint"
+              <% if friend.joint_lists.include?(@source)  %>
+              checked
+              <%end%> >
+        </td>
+        <td><input type="radio" name="friends[<%=friend.id%>]" value = "none"
+              <% unless friend.sources.include?(@source)  %>
               checked
               <%end%> >
         </td>

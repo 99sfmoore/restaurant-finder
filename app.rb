@@ -350,13 +350,13 @@ end
 
 post '/share-list/:source' do
   @source = Source.find(params[:source])
-  params[:shared].keys.each do |friend|
+  params[:friends].each do |friend, status|
     p = Permission.find_or_create_by(user_id: friend, source: @source)
-    p.update_attributes(status: "shared")
-  end
-  params[:joint].keys.each do |friend|
-    p = Permission.find_or_create_by(user_id: friend, source: @source)
-    p.update_attributes(status: "joint")
+    if status == "none"
+      p.destroy
+    else
+      p.update_attributes(status: status)
+    end
   end
   redirect "/source/#{@source.slug}"
 end

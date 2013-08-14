@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
   end
 
   def owned_lists
-    self.sources.where("staus = ?","owned")
+    self.sources.where("status = ?","owned")
   end
 
   def shared_lists
@@ -83,7 +83,7 @@ class User < ActiveRecord::Base
   end
 
   def joint_lists
-    self.sources.where("status = ?","shared")
+    self.sources.where("status = ?","joint")
   end
 end
 
