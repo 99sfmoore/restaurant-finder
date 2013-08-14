@@ -85,6 +85,7 @@ class User < ActiveRecord::Base
   def joint_lists
     self.sources.where("status = ?","joint")
   end
+
 end
 
 class Friendship < ActiveRecord::Base

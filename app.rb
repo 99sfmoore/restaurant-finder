@@ -128,7 +128,7 @@ get '/area/:area' do
 end
 
 get '/custom' do
-  @search_lists = { "Lists" => @source_list,
+  @search_lists = { "Lists" => @user.sources, #I'm not entirely sure how that brings in Public?
                     "Cuisines" => @cuisine_list,
                     "Areas" => @area_list}
   erb :custom
