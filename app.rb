@@ -19,7 +19,7 @@ before do
   @area_list = Area.order(:name)
   @user = User.find_by(email: session[:email])
   @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
-  @personal_sources = @user.sources.where("status = ?","owned") 
+  @personal_sources = @user.owned_lists
   @source_list = @public_sources + (@personal_sources || [])
 end
 
@@ -350,6 +350,15 @@ end
 
 post '/share-list/:source' do
   @source = Source.find(params[:source])
+  params[:shared].keys.each do |friend|
+    p = Permission.find_or_create_by(user_id: friend, source: @source)
+    p.update_attributes(status: "shared")
+  end
+  params[:joint].keys.each do |friend|
+    p = Permission.find_or_create_by(user_id: friend, source: @source)
+    p.update_attributes(status: "joint")
+  end
+  redirect "/source/#{@source.slug}"
 end
   
 

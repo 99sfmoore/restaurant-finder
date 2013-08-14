@@ -1,0 +1,27 @@
+<h2>Share <%=@source.name%> with: </h2>
+
+<form action="/share-list/<%=@source.id%>" method="post">
+  <table>
+    <th>
+      <td>Friend</td>
+      <td>Shared List</td>
+      <td>Joint List</td>
+    </th>
+    <% @user.friend_list.each do |friend| %>
+      <tr>
+        <td><%=friend.name%></td>
+        <td><input type="checkbox" name="shared[<%=friend.id%>]"
+              <% if friend.shared_lists.include?(@source)  %>
+              checked
+              <%end%> >
+        </td>
+        <td><input type="checkbox" name="joint[<%=friend.id%>]"
+            <% if friend.joint_lists.include?(@source)  %>
+              checked
+              <%end%> >
+        </td>
+      </tr>
+    <% end %>
+    </table>
+    <input type="submit" value="Share">
+</form>

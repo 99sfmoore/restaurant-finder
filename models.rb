@@ -73,6 +73,18 @@ class User < ActiveRecord::Base
   def friend_list
     self.friends.where("status = ?","mutual") + self.inverse_friends.where("status = ?","mutual")
   end
+
+  def owned_lists
+    self.sources.where("staus = ?","owned")
+  end
+
+  def shared_lists
+    self.sources.where("status = ?","shared")
+  end
+
+  def joint_lists
+    self.sources.where("status = ?","shared")
+  end
 end
 
 class Friendship < ActiveRecord::Base
