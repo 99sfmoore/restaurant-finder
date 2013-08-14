@@ -41,7 +41,7 @@ get '/' do
     @title = "Restaurant List"
     @sources = Source.all #do I need this??
     @bases = BaseSource.all  #do I need this??
-    @friend_requests = @user.friendships.where("status = ?","respond")
+    @friend_requests = @user.inverse_friendships.where("status = ?","false")
     erb :home
   else
     erb :login
@@ -111,7 +111,6 @@ end
 
 get '/neighborhood/:neighborhood' do
   @neighborhood = Neighborhood.find(params[:neighborhood])
-   
   @restaurant_list = @neighborhood.restaurants.order(:name)
   @title = @neighborhood.name
   @headers = ["Name","Cuisine","Lists","Notes"]
@@ -143,9 +142,7 @@ post '/custom' do
   if params["Lists"] 
     @sources = Source.find(params["Lists"].keys)
     @source_find = []
-    @sources.each do |s|
-      @source_find.concat(s.restaurants).uniq!
-    end
+    @sources.each {|s| @source_find.concat(s.restaurants).uniq!}
   else
     @source_find = Restaurant.all
   end
@@ -153,9 +150,7 @@ post '/custom' do
   if params["Cuisines"] 
     @cuisines = Cuisine.find(params["Cuisines"].keys)
     @cuisine_find = []
-    @cuisines.each do |c|
-      @cuisine_find.concat(c.restaurants).uniq!
-    end
+    @cuisines.each {|c| @cuisine_find.concat(c.restaurants).uniq!}
   else
     @cuisine_find = @source_find
   end
@@ -333,9 +328,9 @@ end
 
 post '/find-friends' do
   @friend_list = User.where(email: params[:email].values)
+  @unfound = @friend_list.size != params[:email].values.size
   @friend_list.each do |friend|
-    Friendship.create(user_id: @user.id, friend_id: friend.id, status: "waiting")
-    Friendship.create(user_id: friend.id, friend_id: @user.id, status: "respond")
+    Friendship.create(user_id: @user.id, friend_id: friend.id, status: "false")    
   end
   erb :friends_found
 end
@@ -347,6 +342,16 @@ post '/accept-friendship' do
   end
   redirect '/'
 end
+
+get '/share-list/:source' do
+  @source = Source.find(params[:source])
+  erb :share_list
+end
+
+post '/share-list/:source' do
+  @source = Source.find(params[:source])
+end
+  
 
 
 

@@ -3,7 +3,7 @@ Cuisines must be unique
   have fixed in display, but not in actual DB
 
 Make scrape routines belong to BaseSource objects
-  Larger object refactoring
+  DONE!!! - Larger object refactoring
 
 Logins persist
 

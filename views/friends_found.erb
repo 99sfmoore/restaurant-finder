@@ -1,5 +1,8 @@
 Invitations have been sent to:
 <% @friend_list.each do |friend| %>
+  <br>
   <%= friend.name%>   <%= friend.email %>
 <%end%>
-Your other friends don't belong yet.
+<% if @unfound %>
+  Your other friends don't belong yet.
+<% end %>

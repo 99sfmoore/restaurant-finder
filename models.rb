@@ -63,13 +63,28 @@ class User < ActiveRecord::Base
   belongs_to :base_source
   has_many :friendships
   has_many :friends, through: :friendships
+  has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
+  has_many :inverse_friends, through: :inverse_friendships, source: :user
+  has_many :sources, through: :permissions
+
   #has_and_belongs_to_many :notes
+
+  def friend_list
+    self.friends.where("status = ?","mutual") + self.inverse_friends.where("status = ?","mutual")
+  end
 end
 
 class Friendship < ActiveRecord::Base
   belongs_to :user
   belongs_to :friend, class_name: 'User'
+  has_many :shared_lists, class_name: 'Source'
+  has_many :joint_lists, class_name: 'Source'
   
+end
+
+class Permission < ActiveRecord::Base
+  belongs_to :user
+  belongs_to :source
 end
 
 
@@ -88,6 +103,7 @@ class Source < ActiveRecord::Base
   belongs_to :base_source
   has_and_belongs_to_many :restaurants
   has_one :note
+  has_many :users, through: :permissions
 
   def public?
     base_source.public_source

@@ -4,7 +4,7 @@
   <form action = '/accept-friendship' method = "post">
     <ul>
       <% @friend_requests.each do |fship| %>
-      <li><label for="<%=fship.id%>"><%=fship.friend.name%></label>
+      <li><label for="<%=fship.id%>"><%=fship.user.name%></label>
           <input id="<%=fship.id%>" type = "checkbox" name="friendship[<%=fship.id%>]">
       </li>
       <% end %>
