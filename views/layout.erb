@@ -34,14 +34,26 @@
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
               <li class="dropdown-submenu"><a tabindex="-1" href="#">Lists</a>
                 <ul class="dropdown-menu">
-                  <% @public_sources.each do |s| %>
-                  <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
-                  <% end %>
                   <% if @user %>
-                    <li class="divider"></li>
-                    <% @personal_sources.each do |s| %>
-                    <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                    <% @user.owned_lists.each do |s| %>
+                      <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
                     <% end %>
+                    <li class="divider"></li>
+                    <% unless @user.joint_lists.size == 0 %>
+                      <% @user.joint_lists.each do |s| %>
+                        <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                      <% end %>
+                      <li class="divider"></li>
+                    <% end %>
+                    <% unless @user.shared_lists.size == 0 %>
+                      <% @user.shared_lists.each do |s| %>
+                        <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                      <% end %>
+                      <li class="divider"></li>
+                      <%end%>
+                  <% end %>
+                  <% @public_sources.each do |s| %>
+                    <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
                   <% end %>
                 </ul>
               </li>
