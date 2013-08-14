@@ -1,25 +1,22 @@
 <h2>Edit <%= @restaurant.name %></h2>
 
   <form action = "/edit/<%= @restaurant.slug %>" method ="post"> 
-    Current Name: <%=@restaurant.name%><br>
-    <label for="restaurant[name]">New Name:</label>
-    <input id="retaurant[name]" name="restaurant[name]" type="text" value="<%=@restaurant.name%>" size = "10"><br>
     <label for="new_location">Same name, different location</label> 
     <input id="new_location" name="new_location" type="checkbox">
-    
-    Current Link: <%=@restaurant.menulink || "none"%><br>
-    <label for="restaurant[menulink]">New Link:</label>
+    <label for="restaurant[menulink]">Menupages Link for new location</label>
     <input id="restaurant[menulink]" name="restaurant[menulink]" type="text" value="<%=@restaurant.menulink || ""%>" size="10">
     <br>
     Include in lists:
-    <% @personal_sources.each do |source| %>
+    <% @user.editable_lists.each do |source| %>
     <label for="<%= source.id %>"><%=source.name %></label>
     <input id="<%= source.id %>" name="sources[<%=source.id%>]" type="checkbox" 
-    <%if @restaurant.sources.include?(source)%>
-        checked
-    <%end%>
+        <%if @restaurant.sources.include?(source)%>
+            checked
+        <%end%>
     >
     <% end %>
+    <label for "notes">Notes</label>
+    <input id="notes" type="textarea" name="notes" value="<%=@restaurant.notes%>">
 
     <input type="submit" value="Update"/>
   </form>

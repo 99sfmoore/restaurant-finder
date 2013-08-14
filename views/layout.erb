@@ -22,7 +22,7 @@
     <div class = "navbar-inner">
       <div class = "container">
         <a class="brand" href="/">
-          Where to Eat?
+          <%= @title %>
         </a>
         <ul class="nav pull-right">
           <% if @user %>
@@ -36,38 +36,38 @@
                 <ul class="dropdown-menu">
                   <% if @user %>
                     <% @user.owned_lists.each do |s| %>
-                      <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                      <li><a href="/list_by/source/<%=s.slug%>"><%=s.name%></li>
                     <% end %>
                     <li class="divider"></li>
                     <% unless @user.joint_lists.size == 0 %>
                       <% @user.joint_lists.each do |s| %>
-                        <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                        <li><a href="/list_by/source/<%=s.slug%>"><%=s.name%></li>
                       <% end %>
                       <li class="divider"></li>
                     <% end %>
                     <% unless @user.shared_lists.size == 0 %>
                       <% @user.shared_lists.each do |s| %>
-                        <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                        <li><a href="/list_by/source/<%=s.slug%>"><%=s.name%></li>
                       <% end %>
                       <li class="divider"></li>
                       <%end%>
                   <% end %>
                   <% @public_sources.each do |s| %>
-                    <li><a href="/source/<%=s.slug%>"><%=s.name%></li>
+                    <li><a href="/list_by/source/<%=s.slug%>"><%=s.name%></li>
                   <% end %>
                 </ul>
               </li>
               <li class="dropdown-submenu"><a tabindex="-1" href="#">Cuisine</a>
                 <ul class="dropdown-menu">
-                  <% @cuisine_list.each do |c| %>
-                  <li><a href="/cuisine/<%=c.slug%>"><%=c.name%></li>
+                  <% Cuisine.order(:name).each do |c| %>
+                  <li><a href="/list_by/cuisine/<%=c.slug%>"><%=c.name%></li>
                   <% end %>
                 </ul>
               </li>
               <li class="dropdown-submenu"><a tabindex="-1" href="#">Neighborhood</a>
                 <ul class="dropdown-menu">
-                  <% @area_list.each do |a| %>
-                    <li><a href="/area/<%= a.id %>"><%= a.name %></li>
+                  <% Area.order(:name).each do |a| %>
+                    <li><a href="/list_by/area/<%= a.slug %>"><%= a.name %></li>
                   <% end %>
                 </ul>
               </li>

@@ -1,5 +1,5 @@
 
-<h2><%= @list_generator.name %></h2>
+<h2><%= @heading %></h2>
 <% if @list_generator.is_a?(Neighborhood) %>
   Do you want to see restaurants in the entire <a href="/list_by/area/<%= @list_generator.area.slug %>"><%= @list_generator.area.name %>?</a>
 <% end %>
@@ -22,7 +22,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @list_generator.restaurants.each do |rest| %>
+    <% @restaurant_list.sort_by{|x|x.name}.each do |rest| %>
     <tr>
       <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
       <td>
@@ -43,7 +43,8 @@
           <% end %>
         <% end %>
       </td>
-      <td><%= rest.notes %></td>  
+      <td><%= rest.notes %></td> 
+      <td><a href="/edit/<%=rest.slug%>">edit</a>
     <% end %>
   </tbody>
   </table>
