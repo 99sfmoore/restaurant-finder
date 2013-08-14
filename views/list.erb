@@ -1,17 +1,17 @@
 
-<h2><%= @title %></h2>
-<% if @neighborhood %>
-  Do you want to see restaurants in the entire <a href="/area/<%= @neighborhood.area_id %>"><%= @neighborhood.area.name %>?</a>
+<h2><%= @list_generator.name %></h2>
+<% if @list_generator.is_a?(Neighborhood) %>
+  Do you want to see restaurants in the entire <a href="/area/<%= @list_generator.area_id %>"><%= @list_generator.area.name %>?</a>
 <% end %>
-<% if @source %>
-  <h4><%= @source.description %><h4>
+<% if @list_generator.is_a?(Source) %>
+  <h4><%= @list_generator.description %><h4>
 <% end %>
-<% if @user.editable_lists.include?(@source) %>
-  <a href="/edit-list/<%=@source.id%>">Edit this list</a>
+<% if @user.editable_lists.include?(@list_generator) %>
+  <a href="/edit-list/<%=@list_generator.id%>">Edit this list</a>
   <br>
 <% end %>
-<% if @user.owned_lists.include?(@source) %>
-  <a href="/share-list/<%=@source.id%>">Share this list</a>
+<% if @user.owned_lists.include?(@list_generator) %>
+  <a href="/share-list/<%=@list_generator.id%>">Share this list</a>
 <% end %>
   <table id="list_table" class="tablesorter">
     <thead>
@@ -22,24 +22,24 @@
     </tr>
   </thead>
   <tbody>
-    <% @restaurant_list.each do |rest| %>
+    <% @list_generator.restaurants.each do |rest| %>
     <tr>
       <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
       <td>
         <% rest.cuisines.uniq.each do |cuisine| %>
-          <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
+          <a href = '/list_by/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
           <br>
         <% end %>
       </td>
       <% if @headers.include?("Neighborhood") %>
         <td><%if rest.neighborhood %>
-          <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
+          <a href = '/list_by/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
             <%end%></td>
       <% end %>
       <td>
         <% rest.sources.each do |source| %>
-          <% if (source.public? || @user.sources.include?(source)) && source != @source  %>
-            <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
+          <% if (source.public? || @user.sources.include?(source)) && source != @list_generator  %>
+            <a href = '/list_by/source/<%=source.slug%>'><%=source.name %></a><br>
           <% end %>
         <% end %>
       </td>
