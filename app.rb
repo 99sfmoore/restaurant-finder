@@ -55,9 +55,7 @@ post '/signup' do
     User.create(  name: params[:name],
                   email: params[:email],
                   salt: password_salt,
-                  passwordhash: password_hash,
-                  base_source: BaseSource.create(name: params[:email])
-                  )
+                  passwordhash: password_hash)
     session[:email] = params[:email]
   end
   redirect '/'

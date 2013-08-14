@@ -60,7 +60,6 @@ end
 
 class User < ActiveRecord::Base
   has_and_belongs_to_many :visits
-  belongs_to :base_source
   has_many :friendships
   has_many :friends, through: :friendships
   has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
@@ -117,7 +116,7 @@ class Source < ActiveRecord::Base
   has_many :users, through: :permissions
 
   def public?
-    base_source.public_source
+    ! base_source
   end
 
   def scrape
