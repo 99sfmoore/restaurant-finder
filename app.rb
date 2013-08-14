@@ -15,12 +15,12 @@ set :database, "mysql2://root@localhost/restaurantproject2"
 
 #this whole thing is weird
 before do
- @cuisine_list = Cuisine.order(:name)
- @area_list = Area.order(:name)
- @user = User.find_by(email: session[:email])
- @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
- @personal_sources = @user.base_source.sources if @user
- @source_list = @public_sources + (@personal_sources || [])
+  @cuisine_list = Cuisine.order(:name)
+  @area_list = Area.order(:name)
+  @user = User.find_by(email: session[:email])
+  @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
+  @personal_sources = @user.sources.where("status = ?","owned") 
+  @source_list = @public_sources + (@personal_sources || [])
 end
 
 helpers do
