@@ -7,7 +7,7 @@
   <form action = "/entry" method ="post">
     <label for="source_name">Choose List to Add to:</label>
     <select name="source[id]">
-      <% @user.base_source.sources.each do |source| %>
+      <% @user.owned_lists.concat(@user.joint_lists).each do |source| %>
         <option value = "<%= source.id %>"><%=source.name%></option>
         <% end %>
       <option value = "No List">(No List)</option>
