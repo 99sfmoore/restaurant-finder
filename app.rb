@@ -215,10 +215,10 @@ end
 #fill from user-generated list
 post '/entry' do
   if params[:source][:id] == "New List"
-    @source = Source.create(name: params[:new_source_name])
-      @source.slug = "#{@source.name}-#{@user.id}".to_url
-      @user.base_source.sources << @source
-      @user.save
+    @source = Source.create(  name: params[:new_source_name],
+                              description: params[:new_source_desc],
+                              slug: "#{params[:new_source_name]}-#{@user.id}".to_url)
+    Permission.create(user: @user, source: @source, status: "owned")
   else 
     @source = Source.find_by(params[:source])
   end
