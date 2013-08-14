@@ -37,8 +37,7 @@ end
 get '/' do
   if @user
     @title = "Restaurant List"
-    @sources = Source.all #do I need this??
-    @bases = BaseSource.all  #do I need this??
+    @bases = BaseSource.all  
     @friend_requests = @user.inverse_friendships.where("status = ?","false")
     erb :home
   else
@@ -226,10 +225,8 @@ post '/entry' do
   erb :check_entry
 end
 
-
-
 #updates menulinks to user-generated links
-post '/edit-list' do
+post '/correct-list' do
   @source = Source.find(params[:source])
   params[:links].each do |id,link|
     unless link == ""
@@ -238,6 +235,20 @@ post '/edit-list' do
       restaurant.fill
       restaurant.save #do I need this
     end
+  end
+  redirect "/source/#{@source.slug}"
+end
+
+get '/edit-list/:source' do
+  @source = Source.find(params[:source])
+  erb :edit_list
+end
+
+post '/edit-list/:source' do 
+  @source = Source.find(params[:source])
+  @source.update_attributes(params[:change])
+  if params[:delete]
+    @source.restaurants.delete(Restaurant.find(params[:delete].keys))
   end
   redirect "/source/#{@source.slug}"
 end

@@ -85,6 +85,10 @@ class User < ActiveRecord::Base
     self.sources.where("status = ?","joint")
   end
 
+  def editable_lists
+    owned_lists.concat(joint_lists)
+  end
+
 end
 
 class Friendship < ActiveRecord::Base
@@ -116,7 +120,7 @@ class Source < ActiveRecord::Base
   has_many :users, through: :permissions
 
   def public?
-    ! base_source
+    base_source
   end
 
   def scrape

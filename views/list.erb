@@ -3,6 +3,13 @@
 <% if @neighborhood %>
   Do you want to see restaurants in the entire <a href="/area/<%= @neighborhood.area_id %>"><%= @neighborhood.area.name %>?</a>
 <% end %>
+<% if @source %>
+  <h4><%= @source.description %><h4>
+<% end %>
+<% if @user.editable_lists.include?(@source) %>
+  <a href="/edit-list/<%=@source.id%>">Edit this list</a>
+  <br>
+<% end %>
 <% if @user.owned_lists.include?(@source) %>
   <a href="/share-list/<%=@source.id%>">Share this list</a>
 <% end %>
@@ -37,8 +44,6 @@
         <% end %>
       </td>
       <td><%= rest.notes %></td>  
-      <td><a href = '/edit/<%=rest.slug%>'>Edit</a></td>
-      <td><a href = '/delete/<%=rest.slug%>'>Delete</a></td>  
     <% end %>
   </tbody>
   </table>

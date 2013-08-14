@@ -7,7 +7,7 @@ Supply new menulink if incorrect location or not available</h2>
         <th><%= head %></th>
       <% end %>
     </tr>
-  <form action="/edit-list" method ="post">
+  <form action="/correct-list" method ="post">
     <input type="hidden" name="source" value="<%=@source.id%>">
     <% @restaurant_list.each do |rest| %>
     <tr>
