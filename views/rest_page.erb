@@ -12,7 +12,7 @@
   <h2>Appears in lists:</h2>
   <h4>
   <% @restaurant.sources.each do |source| %>
-    <% if @source_list.include?(source) %>
+    <% if source.public? || @user.sources.include?(source) %>
     <a href="/source/<%=source.slug%>"><%= source.name %></a>
     <br>
     <% end %>
