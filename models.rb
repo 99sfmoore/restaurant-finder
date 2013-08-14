@@ -76,10 +76,7 @@ end
 
 class Friendship < ActiveRecord::Base
   belongs_to :user
-  belongs_to :friend, class_name: 'User'
-  has_many :shared_lists, class_name: 'Source'
-  has_many :joint_lists, class_name: 'Source'
-  
+  belongs_to :friend, class_name: 'User'  
 end
 
 class Permission < ActiveRecord::Base
