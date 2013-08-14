@@ -3,7 +3,7 @@
 <% if @neighborhood %>
   Do you want to see restaurants in the entire <a href="/area/<%= @neighborhood.area_id %>"><%= @neighborhood.area.name %>?</a>
 <% end %>
-<% if @source && @source %>
+<% if @user.owned_lists.include?(@source) %>
   <a href="/share-list/<%=@source.id%>">Share this list</a>
 <% end %>
   <table id="list_table" class="tablesorter">
