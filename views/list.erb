@@ -1,7 +1,7 @@
 
 <h2><%= @list_generator.name %></h2>
 <% if @list_generator.is_a?(Neighborhood) %>
-  Do you want to see restaurants in the entire <a href="/area/<%= @list_generator.area_id %>"><%= @list_generator.area.name %>?</a>
+  Do you want to see restaurants in the entire <a href="/list_by/area/<%= @list_generator.area.slug %>"><%= @list_generator.area.name %>?</a>
 <% end %>
 <% if @list_generator.is_a?(Source) %>
   <h4><%= @list_generator.description %><h4>
@@ -33,7 +33,7 @@
       </td>
       <% if @headers.include?("Neighborhood") %>
         <td><%if rest.neighborhood %>
-          <a href = '/list_by/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
+          <a href = '/list_by/neighborhood/<%= rest.neighborhood.slug %>'><%= rest.neighborhood.name %>
             <%end%></td>
       <% end %>
       <td>

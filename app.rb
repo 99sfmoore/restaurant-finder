@@ -90,7 +90,7 @@ end
 
 get '/list_by/:type/:slug' do
   type = Module.const_get(params[:type].capitalize)
-  @list_generator = type.find_by(slug: params[:slug]) || type.find(params[:slug])
+  @list_generator = type.find_by(slug: params[:slug])
   # @restaurant_list = @source.restaurants.order(:name)
   # @title = @source.name
   @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes"]

@@ -174,6 +174,7 @@ end
 
 class Area < ActiveRecord::Base
   has_many :neighborhoods
+  has_many :restaurants, through: :neighborhoods
 end
 
 class Neighborhood < ActiveRecord::Base

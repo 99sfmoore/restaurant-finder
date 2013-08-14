@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130814194339) do
+ActiveRecord::Schema.define(version: 20130814210749) do
 
   create_table "areas", force: true do |t|
     t.string "name"
+    t.string "slug"
   end
 
   create_table "base_sources", force: true do |t|
@@ -42,6 +43,7 @@ ActiveRecord::Schema.define(version: 20130814194339) do
   create_table "neighborhoods", force: true do |t|
     t.string  "name"
     t.integer "area_id"
+    t.string  "slug"
   end
 
   create_table "permissions", force: true do |t|
