@@ -3,7 +3,7 @@
 <% if @neighborhood %>
   Do you want to see restaurants in the entire <a href="/area/<%= @neighborhood.area_id %>"><%= @neighborhood.area.name %>?</a>
 <% end %>
-<% if @source && !@source.public? %>
+<% if @source && @source %>
   <a href="/share-list/<%=@source.id%>">Share this list</a>
 <% end %>
   <table id="list_table" class="tablesorter">
@@ -31,7 +31,7 @@
       <% end %>
       <td>
         <% rest.sources.each do |source| %>
-          <% if @source_list.include?(source) && source.name != @title  %>
+          <% if (source.public? || @user.sources.include?(source)) && source != @source  %>
             <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
           <% end %>
         <% end %>

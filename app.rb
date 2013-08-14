@@ -19,7 +19,6 @@ before do
   @area_list = Area.order(:name)
   @user = User.find_by(email: session[:email])
   @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
-  @source_list = @public_sources + (@personal_sources || [])
 end
 
 helpers do
