@@ -1,8 +1,16 @@
-Invitations have been sent to:
-<% @friend_list.each do |friend| %>
+<% unless @new_friends.empty? %>
+  Invitations have been sent to:
   <br>
-  <%= friend.name%>   <%= friend.email %>
-<%end%>
-<% if @unfound %>
-  Your other friends don't belong yet.
+  <% @new_friends.each do |friend| %>
+    <%= friend.name%>   <%= friend.email %>
+    <br>
+  <%end%>
+<% end %>
+<% unless @not_found.empty? %>
+  There are no users with these e-mail addresses yet:
+  <br>
+  <% @not_found.each do |addr| %>
+      <%= addr %>
+    <br>
+  <%end%>
 <% end %>

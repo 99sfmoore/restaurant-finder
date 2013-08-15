@@ -314,10 +314,16 @@ get '/find-friends' do
 end
 
 post '/find-friends' do
-  @friend_list = User.where(email: params[:email].values)
-  @unfound = @friend_list.size != params[:email].values.size
-  @friend_list.each do |friend|
-    Friendship.create(user_id: @user.id, friend_id: friend.id, status: "false")    
+  @new_friends = []
+    @not_found = []
+  params[:email].values.reject{|x| x ==""}.each do |addr|
+    friend = User.find_by(email: addr)
+    if friend
+      Friendship.create(user_id: @user.id, friend_id: friend.id, status: "false")
+      @new_friends << friend
+    else
+      @not_found << addr
+    end
   end
   erb :friends_found
 end
