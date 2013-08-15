@@ -1,0 +1,46 @@
+<form action="/edit-list/<%=@source.id%>" method="post">
+  <label for="change[name]">Name of list:</label>
+  <input type="input" name="change[name]" value="<%=@source.name%>">
+  <label for="change[description]">Description:</label>
+  <input type="input" name="change[description]" value="<%=@source.description%>">
+  <table id="list_table" class="tablesorter">
+    <thead>
+    <tr>
+      <% ["Name","Cuisine","Neighborhood","Lists","Notes","Remove"].each do |head| %>
+        <th><%= head %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @source.restaurants.each do |rest| %>
+    <tr>
+      <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
+      <td>
+        <% rest.cuisines.uniq.each do |cuisine| %>
+          <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
+          <br>
+        <% end %>
+      </td>
+        <td><%if rest.neighborhood %>
+          <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
+            <%end%></td>
+      <td>
+        <% rest.sources.each do |source| %>
+          <% if (source.public? || @user.sources.include?(source)) && source != @source  %>
+            <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
+          <% end %>
+        <% end %>
+      </td>
+      <td><%= rest.display_note(@user) %></td> 
+      <td><input type="checkbox" name="delete[<%=rest.id%>]"></td> 
+    <% end %>
+  </tbody>
+  </table>
+  <input type="submit" value="Edit List">
+</form>
+
+<script>
+  $(function(){
+  $("#list_table").tablesorter();
+  });
+</script>

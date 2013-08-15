@@ -1,0 +1,24 @@
+
+
+<h2>Log visits:</h2>
+
+<br/>
+  <form action = "/log-mult-visits" method ="post">
+    <input type="hidden" name="lines" value="<%=@lines%>">
+    <table>
+      <tr>
+        <th>Restaurant</th><th>Date of Visit</th><th>Notes</th>
+      </tr>
+      <% @lines.times do |n| %>
+      <tr>
+        <td><input type = "text" name = "<%=n%>[restaurant]"></td>
+        <td><input type = "date" name = "<%=n%>[date]"</td>
+        <td><input type = "text" name = "<%=n%>[note]"</td>
+      </tr>
+      <% end %>
+    </table>
+    <input type="submit" value="Enter!"/>
+  </form>
+
+
+

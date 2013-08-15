@@ -15,6 +15,9 @@ class Restaurant < ActiveRecord::Base
   has_many :visits
 
   def fill
+    unless menulink
+      update_attributes(slug: name.to_url, menulink: get_menulink)
+    end
     if test_link(menulink)
       infopage = Nokogiri::HTML(open(menulink))
       nhood_info = get_neighborhood(infopage)
@@ -51,6 +54,10 @@ class Restaurant < ActiveRecord::Base
     infopage.css("li.cuisine.category").text.split(", ").map do |cname|
       Cuisine.find_or_create_by(name: cname, slug: cname.to_url)
     end
+  end
+
+  def get_menulink
+    "#{MENU_PAGES_URL}/restaurants/#{name.gsub(/[^a-zA-Z0-9 ]/,"").gsub(/\s/,"-")}/menu"
   end
 
   def get_menu
@@ -163,18 +170,12 @@ class Source < ActiveRecord::Base
     result
   end
 
-  def get_menulink(name)
-    "#{MENU_PAGES_URL}/restaurants/#{name.gsub(/[^a-zA-Z0-9 ]/,"").gsub(/\s/,"-")}/menu"
-  end
 
   def fill_from(name_list) #see threaded, below THIS NEEDS TO BE REFACTORED!!!
     restaurant_list = []
     name_list.each do |name|
       restaurant = Restaurant.find_or_create_by(name: name)
-      unless restaurant.menulink #restaurant already exists
-        restaurant.update_attributes(slug: name.to_url, menulink: get_menulink(name))
-        restaurant.fill
-      end
+      restaurant.fill unless restaurant.menulink #restaurant already exists
       self.restaurants << restaurant
       restaurant_list << restaurant
     end

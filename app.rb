@@ -310,12 +310,15 @@ get '/log-mult-visits' do
 end
 
 post '/log-mult-visits' do
-  binding.pry
   params[:lines].to_i.times do |n|
     n = n.to_s
-    restaurant = Restaurant.find_by(name: params[n][:restaurant])
-    if restaurant
-      Visit.create(restaurant: restaurant, date: params[n][:date], notes: params[n][:note], user: @user)
+    unless params[n][:restaurant] == ""
+      restaurant = Restaurant.find_by(name: params[n][:restaurant])
+      unless restaurant
+        restaurant = Restaurant.create(name: params[n][:restaurant])
+        restaurant.fill
+      end
+    Visit.create(restaurant: restaurant, date: params[n][:date], notes: params[n][:note], user: @user)
     end
   end
   redirect "/user_history"
