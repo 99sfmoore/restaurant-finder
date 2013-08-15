@@ -299,7 +299,8 @@ get '/log-visit/:rest' do
 end
 
 post '/log-visit' do
-  @visit = Visit.create(params[:visit],user: @user)
+  @visit = Visit.create(params[:visit])
+  @visit.update_attributes(user: @user)
   redirect "/user_history"
 end
 
