@@ -171,9 +171,9 @@ class Source < ActiveRecord::Base
   end
 
 
-  def fill_from(name_list) #see threaded, below THIS NEEDS TO BE REFACTORED!!!
+  def fill #see threaded, below THIS NEEDS TO BE REFACTORED!!!
     restaurant_list = []
-    name_list.each do |name|
+    scrape.each do |name|
       restaurant = Restaurant.find_or_create_by(name: name)
       restaurant.fill unless restaurant.menulink #restaurant already exists
       self.restaurants << restaurant

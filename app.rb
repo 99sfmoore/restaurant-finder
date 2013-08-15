@@ -155,8 +155,8 @@ post '/load_source' do
   @source = Source.create(params[:source])
   @source.update_attributes(slug: @source.name.to_url)
   @base.sources << @source
-  @restaurant_list = @source.fill.order(:name)
-  @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes","Delete"]
+  @restaurant_list = @source.fill.sort_by{|x| x.name}
+  @headers = ["Name","Cuisine","Neighborhood","Delete"]
   erb :correct_source
 end
 
@@ -170,7 +170,7 @@ post '/correct-source/:source' do
   @base_source.save
   Restaurant.delete(@rest_ids_to_delete)
   @restaurant_list = @source.restaurants
-  @headers = ["Name","Cuisine","Neighborhood","New Menulink"]
+  @headers = ["Name","Cuisine","Neighborhood","New Menulink","New Link is for Different Location"]
   erb :check_entry
 end
 
@@ -202,13 +202,13 @@ post '/correct-list' do
   params[:links].each do |id,link|
     unless link == ""
       restaurant = Restaurant.find(id)
-      if params[:new_loc].keys.include?(id)
+      if params[:new_loc] && params[:new_loc].keys.include?(id)
         new_restaurant = Restaurant.find_or_create_by(name: restaurant.name,
                                                       menulink: link)
         new_restaurant.sources << @source
+        restaurant.sources.delete(@source)
         restaurant = new_restaurant
       else
-        restaurant = Restaurant.find(id)
         restaurant.update_attributes(menulink: link)
       end
       restaurant.fill

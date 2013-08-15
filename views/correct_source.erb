@@ -23,14 +23,6 @@
           <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
             <% end %></td>
       <% end %>
-      <td>
-        <% rest.sources.each do |source| %>
-          <% unless source.name == @title %>
-            <a href = '/source/<%=source.slug%>'><%=source.name %></a><br>
-          <% end %>
-        <% end %>
-      </td>
-      <td><%= rest.notes %></td>  
       <td><input type="checkbox" name="<%=rest.id%>"></td> 
     <% end %>
     
