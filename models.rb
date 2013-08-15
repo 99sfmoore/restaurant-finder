@@ -54,8 +54,9 @@ class Restaurant < ActiveRecord::Base
   end
 
   def get_menu
-    menupage = Nokogiri::HTML(open(menulink))
-    menupage.css("div#restaurant-menu")
+    menupage = Nokogiri::HTML(open(menulink).read)
+    menupage.encoding = 'utf-8'
+    menupage.css("div#restaurant-menu")  #.delete(/<td>&nsbp<\/td>/) class is Nokogiri::XML::Nodeset
   end
 
   def display_note(user)
