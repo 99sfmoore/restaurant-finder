@@ -46,6 +46,8 @@ GEM
     sinatra-activerecord (1.2.3)
       activerecord (>= 3.0)
       sinatra (~> 1.0)
+    sinatra-flash (0.3.0)
+      sinatra (>= 1.0.0)
     slop (3.4.5)
     stringex (2.0.8)
     thread_safe (0.1.2)
@@ -65,4 +67,5 @@ DEPENDENCIES
   rake
   sinatra
   sinatra-activerecord
+  sinatra-flash
   stringex

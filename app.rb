@@ -2,6 +2,7 @@ require 'bundler/setup'
 
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'sinatra/flash'
 require 'pry-nav'  
 require 'bcrypt'
 require 'stringex'
@@ -47,7 +48,10 @@ end
 
 post '/signup' do
   if params[:password] != params[:confirm]
+    flash[:password_error] = "Passwords must match"
     redirect "/" #add message
+  elsif User.find_by(email: params[:email])
+    flash[:user_error] = "An account already exists for this e-mail address"
   else
     password_salt = BCrypt::Engine.generate_salt
     password_hash = BCrypt::Engine.hash_secret(params[:password], password_salt)
