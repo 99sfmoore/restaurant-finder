@@ -9,7 +9,7 @@ MENU_PAGES_URL = "http://www.menupages.com"
 class Restaurant < ActiveRecord::Base
   has_and_belongs_to_many :sources
   has_and_belongs_to_many :cuisines
-  #has_and_belongs_to_many :notes
+  has_many :notes
   belongs_to :neighborhood
   has_many :visits
 
@@ -66,8 +66,7 @@ class User < ActiveRecord::Base
   has_many :inverse_friends, through: :inverse_friendships, source: :user
   has_many :permissions
   has_many :sources, through: :permissions
-
-  #has_and_belongs_to_many :notes
+  has_many :notes
 
   def friend_list
     self.friends.where("status = ?","mutual") + self.inverse_friends.where("status = ?","mutual")
@@ -101,6 +100,10 @@ class Permission < ActiveRecord::Base
   belongs_to :source
 end
 
+class Note < ActiveRecord::Base
+  belongs_to :restaurant
+  belongs_to :user
+end
 
 class Visit < ActiveRecord::Base
   belongs_to :restaurant

@@ -19,7 +19,7 @@
     <%end%>
   </h4>
   <h2> Notes</h2>
-  <h4><%= @restaurant.notes %></h4>
+  <h4><%= @restaurant.notes.where("user_id = ?", @user.id).first.content %></h4>
   <h1><%= @restaurant.name %> Menu<h1>
   <%= @menu %>
 

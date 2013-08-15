@@ -272,19 +272,19 @@ get '/edit/:rest' do
 end  
 
 post '/edit/:rest' do
-  @restaurant = Restaurant.find_by(slug: params[:rest])
+  restaurant = Restaurant.find_by(slug: params[:rest])
   if params[:new_location] == "on"
     new_restaurant = Restaurant.create( name: @restaurant.name,
                                         menulink: params[:restaurant][:menulink])
     new_restaurant.update_attributes(slug: new_restaurant.menulink.match(/restaurants\/(.*)\/menu/)[1])
     new_restaurant.fill
-    @restaurant = new_restaurant
-  else
-    @restaurant = Restaurant.find_by(slug: params[:rest_name])
+    restaurant = new_restaurant
   end
-  @restaurant.sources = (@restaurant.sources.select{|s| @public_sources.include?(s)}||[]) + (params[:sources] ? Source.find(params[:sources].keys) : [])
-  @restaurant.save
-  redirect "/rest_page/#{@restaurant.slug}"
+  restaurant.sources = (restaurant.sources.select{|s| @public_sources.include?(s)}||[]) + (params[:sources] ? Source.find(params[:sources].keys) : [])
+  note = Note.find_or_create_by(restaurant: restaurant, user: @user)
+  note.update_attributes(content: params[:notes])
+  restaurant.save #do I need this?
+  redirect "/rest_page/#{restaurant.slug}"
 end
 
 
