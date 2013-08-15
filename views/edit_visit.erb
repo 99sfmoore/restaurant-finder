@@ -1,0 +1,13 @@
+<h2>Edit visit to <%= @visit.restaurant.name %></h2>
+
+  <form action = "/edit-visit/<%= @visit.id %>" method ="post"> 
+    <label for="delete">Delete this Visit</label> 
+    <input id="delete" name="delete" type="checkbox">
+    <label for="date">Change Date</label>
+    <input id="date" name="visit[date]" type="date" value="<%=@visit.date%>">
+    <br>
+    <label for "notes">Change Note</label>
+    <input id="notes" type="text" name="visit[notes]" value="<%= @visit.notes%>">
+
+    <input type="submit" value="Update"/>
+  </form>

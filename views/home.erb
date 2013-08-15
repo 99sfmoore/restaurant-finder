@@ -1,3 +1,7 @@
+<% if flash[:message] %>
+<p class="text-message"><%= flash[:message] %></p>
+<% end %>
+
 <% if @friend_requests.size > 0 %>
   <h2>Friend Requests</h2>
   You've been friended by:

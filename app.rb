@@ -153,11 +153,9 @@ end
 post '/load_source' do
   @base = BaseSource.find(params[:base_id])
   @source = Source.create(params[:source])
-  @source.slug = @source.name.to_url
-  @source.save # do I need this?
+  @source.update_attributes(slug: @source.name.to_url)
   @base.sources << @source
-  @source.fill_from(@source.scrape)
-  @restaurant_list = @source.restaurants.order(:name)
+  @restaurant_list = @source.fill.order(:name)
   @headers = ["Name","Cuisine","Neighborhood","Other Lists","Notes","Delete"]
   erb :correct_source
 end
@@ -236,11 +234,12 @@ end
 get '/rest_page/:rest_name' do
   @slug = params[:rest_name]
   @restaurant = Restaurant.find_by(slug: @slug)
-  if @restaurant
-    @menu = @restaurant.get_menu
+  if @restaurant.nil?
+    erb :not_found
+  elsif @restaurant.good_link
     erb :rest_page
   else
-    erb :not_found
+    erb :edit
   end
 end
 
@@ -278,18 +277,28 @@ end
 
 post '/edit/:rest' do
   restaurant = Restaurant.find_by(slug: params[:rest])
-  if params[:new_location] == "on"
-    new_restaurant = Restaurant.create( name: restaurant.name,
-                                        menulink: params[:restaurant][:menulink])
-    new_restaurant.update_attributes(slug: new_restaurant.menulink.match(/restaurants\/(.*)\/menu/)[1])
-    new_restaurant.fill
-    restaurant = new_restaurant
-  end
+  if params[:delete] == "on"
+    if restaurant.neighborhood
+      flash[:message] = "#{restaurant.name} cannot be deleted"
+    else
+      flash[:message] = "#{restaurant.name} has been deleted"
+      restaurant.destroy
+    end
+    redirect '/'
+  else
+    if params[:new_location] == "on"
+      new_restaurant = Restaurant.create( name: restaurant.name,
+                                          menulink: params[:restaurant][:menulink])
+      new_restaurant.update_attributes(slug: new_restaurant.menulink.match(/restaurants\/(.*)\/menu/)[1])
+      new_restaurant.fill
+      restaurant = new_restaurant
+    end
   restaurant.sources = (restaurant.sources.select{|s| @public_sources.include?(s)}||[]) + (params[:sources] ? Source.find(params[:sources].keys) : [])
+  restaurant.save
   note = Note.find_or_create_by(restaurant: restaurant, user: @user)
   note.update_attributes(content: params[:notes])
-  restaurant.save #do I need this?
   redirect "/rest_page/#{restaurant.slug}"
+  end
 end
 
 
@@ -326,6 +335,23 @@ end
 
 get '/user_history' do
   erb :history
+end
+
+get '/edit-visit/:visit' do
+  @visit = Visit.find(params[:visit])
+  erb :edit_visit
+end
+
+post '/edit-visit/:id' do
+  visit = Visit.find(params[:id])
+  if params[:delete] == "on"
+    flash[:message] = "Visit to #{visit.restaurant.name} has been deleted"
+    visit.destroy
+  else
+    visit.update_attributes(params[:visit])
+    flash[:message] = "Visit to #{visit.restaurant.name} has been updated"
+  end
+  redirect "/user_history"
 end
 
 get '/find-friends' do

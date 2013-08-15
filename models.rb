@@ -12,13 +12,13 @@ class Restaurant < ActiveRecord::Base
   has_many :notes
   belongs_to :neighborhood
   has_one :area, through: :neighborhood
-  has_many :visits
+  has_many :visits, dependent: :destroy
 
   def fill
     unless menulink
       update_attributes(slug: name.to_url, menulink: get_menulink)
     end
-    if test_link(menulink)
+    if good_link
       infopage = Nokogiri::HTML(open(menulink))
       nhood_info = get_neighborhood(infopage)
       area = Area.find_or_create_by(name: nhood_info[:area])
@@ -38,8 +38,8 @@ class Restaurant < ActiveRecord::Base
     {area: area_info.first[:area].gsub("-"," ").titlecase, neighborhood: area_info.last[:hood].gsub("-"," ").titlecase}
   end
 
-  def test_link(link)
-    Net::HTTP.get_response(URI.parse(link)).code.to_i == 200
+  def good_link
+    Net::HTTP.get_response(URI.parse(menulink)).code.to_i == 200
   end
 
   def get_address(infopage)

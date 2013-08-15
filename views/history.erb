@@ -1,5 +1,8 @@
 
 <h2><%= @user.name %>'s History</h2>
+<% if flash[:message] %>
+  <p class="text-message"><%= flash[:message] %></p>
+<% end %>
 <a href = '/log-mult-visits'>log visits</a>
 
   <table>
@@ -8,7 +11,7 @@
       <td>Date Visited</td>
       <td>Notes</td>
     </tr>
-    <% @user.visits.each do |visit| %>
+    <% @user.visits.sort_by{|v| v.date}.reverse.each do |visit| %>
     <tr>
       <td><a href = '/rest_page/<%= visit.restaurant.slug %>'><%=visit.restaurant.name %></a></td>
       <td>
@@ -16,6 +19,9 @@
       </td>
       <td>
         <%= visit.notes %>
+      </td>
+      <td>
+        <a href = '/edit-visit/<%=visit.id%>'>Edit</a>
       </td>
     <% end %>
   </table>

@@ -1,6 +1,8 @@
 <h2>Edit <%= @restaurant.name %></h2>
 
   <form action = "/edit/<%= @restaurant.slug %>" method ="post"> 
+    <label for="delete">Delete this restaurant</label> 
+    <input id="delete" name="delete" type="checkbox">
     <label for="new_location">Same name, different location</label> 
     <input id="new_location" name="new_location" type="checkbox">
     <label for="restaurant[menulink]">Menupages Link for new location</label>
