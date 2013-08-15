@@ -43,8 +43,7 @@
           <% end %>
         <% end %>
       </td>
-      <td><%= rest.notes.where("user_id = ?",@user.id).first.content %></td> 
-      <td><a href="/edit/<%=rest.slug%>">edit</a>
+      <td><%= rest.display_note(@user) %></td> 
     <% end %>
   </tbody>
   </table>

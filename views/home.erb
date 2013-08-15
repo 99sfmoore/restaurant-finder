@@ -16,7 +16,7 @@
 <h2>Restaurant Ideas</h2>
   <ul>
     <% @public_sources.each do |source| %>
-    <li><a href='/source/<%= source.slug %>'><%= source.name %></a></li>
+    <li><a href='/list_by/source/<%= source.slug %>'><%= source.name %></a></li>
     <% end %>
   </ul>
 

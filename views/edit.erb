@@ -16,7 +16,7 @@
     >
     <% end %>
     <label for "notes">Notes</label>
-    <input id="notes" type="textarea" name="notes" value="<%=@restaurant.notes.where("user_id=?",@user.id).first%>">
+    <input id="notes" type="textarea" name="notes" value="<%= @restaurant.display_note(@user)%>">
 
     <input type="submit" value="Update"/>
   </form>

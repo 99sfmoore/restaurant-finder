@@ -274,7 +274,7 @@ end
 post '/edit/:rest' do
   restaurant = Restaurant.find_by(slug: params[:rest])
   if params[:new_location] == "on"
-    new_restaurant = Restaurant.create( name: @restaurant.name,
+    new_restaurant = Restaurant.create( name: restaurant.name,
                                         menulink: params[:restaurant][:menulink])
     new_restaurant.update_attributes(slug: new_restaurant.menulink.match(/restaurants\/(.*)\/menu/)[1])
     new_restaurant.fill

@@ -11,6 +11,7 @@ class Restaurant < ActiveRecord::Base
   has_and_belongs_to_many :cuisines
   has_many :notes
   belongs_to :neighborhood
+  has_one :area, through: :neighborhood
   has_many :visits
 
   def fill
@@ -55,6 +56,15 @@ class Restaurant < ActiveRecord::Base
   def get_menu
     menupage = Nokogiri::HTML(open(menulink))
     menupage.css("div#restaurant-menu")
+  end
+
+  def display_note(user)
+    found_note = self.notes.where("user_id = ?",user.id).first
+    if found_note
+      return found_note.content
+    else
+      return ""
+    end
   end
 end
 

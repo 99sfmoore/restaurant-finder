@@ -4,22 +4,22 @@
 <h4><%= @restaurant.address %>
   <br><%= @restaurant.cross_street %>
   <% if @restaurant.neighborhood %>
-    <br><a href="/area/<%=@restaurant.neighborhood.area.id%>"><%= @restaurant.neighborhood.area.name %></a> / <a href="/neighborhood/<%= @restaurant.neighborhood.id %>"><%= @restaurant.neighborhood.name %></a>
+    <br><a href="/list_by/area/<%=@restaurant.area.slug%>"><%= @restaurant.neighborhood.area.name %></a> / <a href="/list_by/neighborhood/<%= @restaurant.neighborhood.slug %>"><%= @restaurant.neighborhood.name %></a>
   <%end%>
   <% @restaurant.cuisines.uniq.each do |cuisine| %>
-    <br><a href="/cuisine/<%=cuisine.slug%>"><%=cuisine.name%></a>
+    <br><a href="/list_by/cuisine/<%=cuisine.slug%>"><%=cuisine.name%></a>
     <%end%></h4>
   <h2>Appears in lists:</h2>
   <h4>
   <% @restaurant.sources.each do |source| %>
     <% if source.public? || @user.sources.include?(source) %>
-    <a href="/source/<%=source.slug%>"><%= source.name %></a>
+    <a href="/list_by/source/<%=source.slug%>"><%= source.name %></a>
     <br>
     <% end %>
     <%end%>
   </h4>
   <h2> Notes</h2>
-  <h4><%= @restaurant.notes.where("user_id = ?", @user.id).first.content %></h4>
+  <h4><%= @restaurant.display_note(@user) %></h4>
   <h1><%= @restaurant.name %> Menu<h1>
   <%= @menu %>
 
