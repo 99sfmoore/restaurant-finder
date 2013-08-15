@@ -293,19 +293,34 @@ post '/edit/:rest' do
 end
 
 
-get '/log-visit/:rest' do #not using this yet
+get '/log-visit/:rest' do 
   @restaurant = Restaurant.find_by(slug: params[:rest])
   erb :log_visit
 end
 
 post '/log-visit' do
-  @visit = Visit.create(params[:visit])
-  @user.visits << @visit
+  @visit = Visit.create(params[:visit],user: @user)
+  redirect "/user_history"
+end
+
+get '/log-mult-visits' do
+  @lines = 10
+  erb :log_multiple_visits
+end
+
+post '/log-mult-visits' do
+  binding.pry
+  params[:lines].to_i.times do |n|
+    n = n.to_s
+    restaurant = Restaurant.find_by(name: params[n][:restaurant])
+    if restaurant
+      Visit.create(restaurant: restaurant, date: params[n][:date], notes: params[n][:note], user: @user)
+    end
+  end
   redirect "/user_history"
 end
 
 get '/user_history' do
-  @history = @user.visits
   erb :history
 end
 

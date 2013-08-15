@@ -1,5 +1,6 @@
 
 <h2><%= @user.name %>'s History</h2>
+<a href = '/log-mult-visits'>log visits</a>
 
   <table>
     <tr>
@@ -7,7 +8,7 @@
       <td>Date Visited</td>
       <td>Notes</td>
     </tr>
-    <% @history.each do |visit| %>
+    <% @user.visits.each do |visit| %>
     <tr>
       <td><a href = '/rest_page/<%= visit.restaurant.slug %>'><%=visit.restaurant.name %></a></td>
       <td>

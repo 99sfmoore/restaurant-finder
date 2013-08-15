@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130814233404) do
+ActiveRecord::Schema.define(version: 20130815163925) do
 
   create_table "areas", force: true do |t|
     t.string "name"
@@ -92,15 +92,11 @@ ActiveRecord::Schema.define(version: 20130814233404) do
     t.string "passwordhash"
   end
 
-  create_table "users_visits", id: false, force: true do |t|
-    t.integer "user_id",  null: false
-    t.integer "visit_id", null: false
-  end
-
   create_table "visits", force: true do |t|
     t.date    "date"
     t.integer "restaurant_id"
     t.string  "notes"
+    t.integer "user_id"
   end
 
 end

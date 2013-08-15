@@ -70,7 +70,7 @@ class Restaurant < ActiveRecord::Base
 end
 
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :visits
+  has_many :visits
   has_many :friendships
   has_many :friends, through: :friendships
   has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
@@ -118,7 +118,7 @@ end
 
 class Visit < ActiveRecord::Base
   belongs_to :restaurant
-  has_and_belongs_to_many :users
+  belongs_to :user
   #has_and_belongs_to_many :notes
 end
 
