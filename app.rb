@@ -72,9 +72,10 @@ post '/login' do
   @user = User.find_by(email: params[:email])
   if @user && @user.passwordhash == BCrypt::Engine.hash_secret(params[:password],@user.salt)
     session[:email] = params[:email]
-    redirect "/"
+  else
+    flash[:login_error] = "Incorrect username and password"
   end
-  erb :error
+  redirect '/'
 end
 
 get '/logout' do 

@@ -5,7 +5,9 @@
     <input id="email" name="email" type="text" size = "10"><br>
     <label for="password">Password:</label> 
     <input id="password" name="password" type="password">
-
+    <% if flash[:login_error] %>
+    <p class="text-error"><%= flash[:login_error]%></p>
+    <% end %>
     <input type="submit" value="Login"/>
   </form>
 
