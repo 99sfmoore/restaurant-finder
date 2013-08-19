@@ -1,24 +1,37 @@
 <h2>Edit <%= @restaurant.name %></h2>
 
-  <form action = "/edit/<%= @restaurant.slug %>" method ="post"> 
-    <label for="delete">Delete this restaurant</label> 
-    <input id="delete" name="delete" type="checkbox">
-    <label for="new_location">Same name, different location</label> 
-    <input id="new_location" name="new_location" type="checkbox">
-    <label for="restaurant[menulink]">Menupages Link for new location</label>
-    <input id="restaurant[menulink]" name="restaurant[menulink]" type="text" value="<%=@restaurant.menulink || ""%>" size="10">
+  <form class="form-horizontal" action = "/edit/<%= @restaurant.slug %>" method ="post"> 
+    <div class="control-group">
+        <label class="control-label" for="delete"><input id="delete" name="delete" type="checkbox" />  Delete this restaurant</label>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="new_location"><input id="new_location" name="new_location" type="checkbox" />  Same name, different location</label> 
+        <div class="controls">  
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="restaurant[menulink]">Menupages Link for new location</label>
+        <div class="controls">
+            <input id="restaurant[menulink]" name="restaurant[menulink]" type="text" value="<%=@restaurant.menulink || ""%>" size="10" />
+        </div>
+    </div>
     <br>
     Include in lists:
     <% @user.editable_lists.each do |source| %>
-    <label for="<%= source.id %>"><%=source.name %></label>
-    <input id="<%= source.id %>" name="sources[<%=source.id%>]" type="checkbox" 
-        <%if @restaurant.sources.include?(source)%>
-            checked
-        <%end%>
-    >
-    <% end %>
-    <label for "notes">Notes</label>
-    <input id="notes" type="textarea" name="notes" value="<%= @restaurant.display_note(@user)%>">
+    <div class="control-group">
+        <div class="controls">
+        <label class="checkbox" for="<%= source.id %>"><input id="<%= source.id %>" name="sources[<%=source.id%>]" type="checkbox" 
+                <%if @restaurant.sources.include?(source)%>
+                    checked
+                <%end%> /><%=source.name %></label>
+        </div>
+        <% end %>
+        <div class="control-group">
+            <label class="control-label" for "notes">Notes</label>
+            <div class="controls">
+                <textarea id="notes" name="notes" rows ="10"><%= @restaurant.display_note(@user)%></textarea>
+            </div>
+        </div>
 
-    <input type="submit" value="Update"/>
+        <input type="submit" class="btn" value="Update">
   </form>

@@ -1,5 +1,11 @@
 
-<h1><%= @restaurant.name %></h1> <a href="/log-visit/<%= @restaurant.slug %>">log visit</a>  <a href="/edit/<%=@restaurant.slug%>">edit</a>
+<h1><%= @restaurant.name %></h1> 
+
+<div class="btn-group">
+  <a class="btn" href="/log-visit/<%= @restaurant.slug %>">log visit</a>  
+  <a class="btn"href="/edit/<%=@restaurant.slug%>">edit</a>
+</div>
+
 
 <h4><%= @restaurant.address %>
   <br><%= @restaurant.cross_street %>
@@ -20,7 +26,7 @@
   </h4>
   <h2> Notes</h2>
   <h4><%= @restaurant.display_note(@user) %></h4>
-  <h1><%= @restaurant.name %> Menu<h1>
+  <h1><%= @restaurant.name %> Menu</h1>
   <%= @restaurant.get_menu %>
 
 

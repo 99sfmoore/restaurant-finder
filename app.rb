@@ -236,10 +236,8 @@ get '/rest_page/:rest_name' do
   @restaurant = Restaurant.find_by(slug: @slug)
   if @restaurant.nil?
     erb :not_found
-  elsif @restaurant.good_link
-    erb :rest_page
   else
-    erb :edit
+    erb :rest_page
   end
 end
 
