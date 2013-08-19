@@ -191,7 +191,7 @@ post '/entry' do
     @source = Source.find_by(params[:source])
   end
   name_list = params[:restaurant].values.reject{|x| x==""}
-  @restaurant_list = @source.fill_from(name_list)
+  @restaurant_list = @source.fill(name_list)
   @headers = ["Name","Cuisine","Neighborhood","New Menulink","Same Name, Different Location"]
   erb :check_entry
 end
