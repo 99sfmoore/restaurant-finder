@@ -17,7 +17,7 @@ set :database, "mysql2://root@localhost/restaurantproject2"
 #this whole thing is weird
 
 before do
-  @title="TBD"
+  @title="Hungry?"
   @user = User.find_by(email: session[:email])
   @public_sources = Source.joins(:base_source).where(base_sources: {public_source: true})
   @list_generator = nil
