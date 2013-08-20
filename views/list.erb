@@ -4,7 +4,7 @@
   Do you want to see restaurants in the entire <a href="/list_by/area/<%= @list_generator.area.slug %>"><%= @list_generator.area.name %>?</a>
 <% end %>
 <% if @list_generator.is_a?(Source) %>
-  <h4><%= @list_generator.description %><h4>
+  <h4><%= @list_generator.description %></h4>
 <% end %>
 <% if @user.editable_lists.include?(@list_generator) %>
   <a href="/edit-list/<%=@list_generator.id%>">Edit this list</a>
@@ -13,7 +13,7 @@
 <% if @user.owned_lists.include?(@list_generator) %>
   <a href="/share-list/<%=@list_generator.id%>">Share this list</a>
 <% end %>
-  <table id="list_table" class="tablesorter">
+  <table id="list_table" class="tablesorter table">
     <thead>
     <tr>
       <% @headers.each do |head| %>

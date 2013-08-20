@@ -180,6 +180,10 @@ get '/entry' do
   erb :create_entry
 end
 
+get '/create_list' do
+  erb :create_new_list
+end
+
 #fill from user-generated list
 post '/entry' do
   if params[:source][:id] == "New List"

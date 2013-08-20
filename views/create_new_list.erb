@@ -1,11 +1,9 @@
 <h2>Add restaurants</h2>
   <form action = "/entry" method ="post">
-    <label for="source_name">Select a list:</label>
-    <select name="source[id]">
-      <% @user.owned_lists.concat(@user.joint_lists).each do |source| %>
-        <option value = "<%= source.id %>"><%=source.name%></option>
-        <% end %> 
-    </select>
+    <label for="new_source_name">Name of New List:</label>
+    <input id="new_source_name" name="new_source_name" type="text">
+    <label for="new_source_desc">Description of New List:</label>
+    <input id="new_source_desc" name="new_source_desc" type="text">
     <p>Add your restaurants:</p>
       <% 4.times do |n| %>
       <input id="<%= "restaurant[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text">
@@ -14,4 +12,3 @@
     <input type="submit" value="SUBMIT!"/>
   </form>
   
-

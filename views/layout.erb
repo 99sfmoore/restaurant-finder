@@ -18,8 +18,16 @@
         <ul class="nav pull-right">
           <% if @user %>
             <li><a href="/user_history"><%=@user.name%>'s History</a></li>
-            <li><a href="/entry">Add Restaurant</a></li>
           <% end %>
+            <li class="dropdown">
+              <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Add Restaurant<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <% if @user && @user.sources.size != 0 %>
+                <li><a href="/entry">To Existing List</a></li>
+                <% end %>
+                <li><a href="/create_list">To New List</a></li>
+              </ul>
+            </li>
            <li class="dropdown">
             <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Find By<b class="caret"></b></a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
