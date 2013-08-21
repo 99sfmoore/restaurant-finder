@@ -1,0 +1,23 @@
+/* general */
+.btn-account {
+  display: block;
+}
+
+.restaurant-container {
+  margin-top: 2%;
+}
+
+/* list sharing */
+
+.sharing-table {
+  width: auto;
+}
+
+.sharing-table th {
+  width: 25%;
+}
+
+.sharing-table .sharing-table-data {
+  text-align: center;
+}
+

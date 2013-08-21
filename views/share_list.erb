@@ -1,27 +1,27 @@
 <h3>Share <%=@source.name%> with: </h3>
 
 <form action="/share-list/<%=@source.id%>" method="post">
-  <table class="table">
+  <table class="table sharing-table">
     <tr>
-      <th>Friend</th>
-      <th>Shared List</th>
-      <th>Joint List</th>
-      <th>No Permssions</th>
+      <th class="sharing-table-friend">Friend</th>
+      <th class="text-success sharing-table-data">Can View &amp; Edit</th>
+      <th class="text-warning sharing-table-data">Can View</th>
+      <th class="text-error sharing-table-data">No Permissions</th>
     </tr>
     <% @user.friend_list.each do |friend| %>
       <tr>
-        <td><%=friend.name%></td>
-        <td><input type="radio" name="friends[<%=friend.id%>]" value = "shared"
+        <td class="sharing-table-friend"><%=friend.name%></td>
+        <td class="sharing-table-data"><input type="radio" name="friends[<%=friend.id%>]" value = "joint"
+          <% if friend.joint_lists.include?(@source)  %>
+              checked
+          <%end%> >
+        </td>
+        <td class="sharing-table-data"><input type="radio" name="friends[<%=friend.id%>]" value = "shared"
               <% if friend.shared_lists.include?(@source)  %>
               checked
               <%end%> >
         </td>
-        <td><input type="radio" name="friends[<%=friend.id%>]" value = "joint"
-              <% if friend.joint_lists.include?(@source)  %>
-              checked
-              <%end%> >
-        </td>
-        <td><input type="radio" name="friends[<%=friend.id%>]" value = "none"
+        <td class="sharing-table-data"><input type="radio" name="friends[<%=friend.id%>]" value = "none"
               <% unless friend.sources.include?(@source)  %>
               checked
               <%end%> >
@@ -29,5 +29,5 @@
       </tr>
     <% end %>
     </table>
-    <input type="submit" value="Share">
+    <input type="submit" class="btn btn-primary" value="Update Permissions">
 </form>
