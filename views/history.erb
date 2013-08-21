@@ -1,15 +1,17 @@
 
 <h2><%= @user.name %>'s History</h2>
-<% if flash[:message] %>
-  <p class="text-message"><%= flash[:message] %></p>
+<% if flash[:edit] %>
+  <div class="alert alert-info"><%= flash[:edit] %></div>
+<% elsif flash[:add] %>
+  <div class="alert alert-success"><%= flash[:add] %></div>
 <% end %>
-<a href = '/log-mult-visits'>log visits</a>
+<a class="btn" href = '/log-mult-visits'>Log Visits</a>
 
-  <table>
+  <table class="table">
     <tr>
-      <td>Restaurant</td>
-      <td>Date Visited</td>
-      <td>Notes</td>
+      <th>Restaurant</th>
+      <th>Date Visited</th>
+      <th>Notes</th>
     </tr>
     <% @user.visits.sort_by{|v| v.date}.reverse.each do |visit| %>
     <tr>

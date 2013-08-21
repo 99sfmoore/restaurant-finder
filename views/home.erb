@@ -23,22 +23,3 @@
     <li><a href='/list_by/source/<%= source.slug %>'><%= source.name %></a></li>
     <% end %>
   </ul>
-
-<h2>Load new source from:</h2>
-  <form action = "/load_source" method ="post"> <!-- fix this -->
-    <label for="base_source">Choose a method:</label>
-    <select name = "base_id">
-    <% @bases.each do |base| %>
-      <% if base.public_source %>
-        <option value = '<%= base.id %>'><%= base.name %></option>
-      <% end %>
-    <% end %>
-  </select>
-    <label for="source_name">Enter name of new source:</label>
-    <input id="source_name" name="source[name]" type="text" value="" size="10">
-    
-    <label for="source_url">Enter url of new source:</label>
-    <input id="source_url" name="source[url]" type="text" value="" size="10">
-    
-    <input type="submit" value="Load source!"/>
-  </form>

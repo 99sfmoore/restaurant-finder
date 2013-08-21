@@ -1,9 +1,9 @@
 
-<h2><%= @title %></h2>
+<h2>Loaded <%= @source.name %></h2>
 <form action = "/correct-source/<%=@source.slug%>" method = "post">
   <label for="delete_button">Check any items in the list that should not have been imported(i.e. not restaurants)</label>
   <input id="delete_button" type="submit" value="Delete">
-  <table>
+  <table class="table">
     <tr>
       <% @headers.each do |head| %>
         <th><%= head %></th>

@@ -149,6 +149,10 @@ post '/custom' do
   erb :list
 end
 
+get '/load_source' do
+  erb :load_source
+end
+
 #automatic loading of list from website
 post '/load_source' do
   @base = BaseSource.find(params[:base_id])
@@ -186,7 +190,7 @@ end
 
 #fill from user-generated list
 post '/entry' do
-  if params[:source][:id] == "New List"
+  if params[:new_list]
     @source = Source.create(  name: params[:new_source_name],
                               description: params[:new_source_desc],
                               slug: "#{params[:new_source_name]}-#{@user.id}".to_url)
@@ -332,6 +336,7 @@ post '/log-mult-visits' do
     Visit.create(restaurant: restaurant, date: params[n][:date], notes: params[n][:note], user: @user)
     end
   end
+  flash[:add] = "Your visits have been added."
   redirect "/user_history"
 end
 
@@ -347,11 +352,11 @@ end
 post '/edit-visit/:id' do
   visit = Visit.find(params[:id])
   if params[:delete] == "on"
-    flash[:message] = "Visit to #{visit.restaurant.name} has been deleted"
+    flash[:edit] = "Visit to #{visit.restaurant.name} has been deleted"
     visit.destroy
   else
     visit.update_attributes(params[:visit])
-    flash[:message] = "Visit to #{visit.restaurant.name} has been updated"
+    flash[:edit] = "Visit to #{visit.restaurant.name} has been updated"
   end
   redirect "/user_history"
 end

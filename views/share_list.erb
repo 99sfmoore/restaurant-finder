@@ -1,13 +1,13 @@
-<h2>Share <%=@source.name%> with: </h2>
+<h3>Share <%=@source.name%> with: </h3>
 
 <form action="/share-list/<%=@source.id%>" method="post">
-  <table>
-    <th>
-      <td>Friend</td>
-      <td>Shared List</td>
-      <td>Joint List</td>
-      <td>No Permssions</td>
-    </th>
+  <table class="table">
+    <tr>
+      <th>Friend</th>
+      <th>Shared List</th>
+      <th>Joint List</th>
+      <th>No Permssions</th>
+    </tr>
     <% @user.friend_list.each do |friend| %>
       <tr>
         <td><%=friend.name%></td>

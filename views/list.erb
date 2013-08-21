@@ -7,12 +7,15 @@
   <h4><%= @list_generator.description %></h4>
 <% end %>
 <% if @user.editable_lists.include?(@list_generator) %>
-  <a href="/edit-list/<%=@list_generator.id%>">Edit this list</a>
-  <br>
-<% end %>
-<% if @user.owned_lists.include?(@list_generator) %>
-  <a href="/share-list/<%=@list_generator.id%>">Share this list</a>
-<% end %>
+  <div class="btn-group">
+    <a class="btn" href="/edit-list/<%=@list_generator.id%>">Edit this list</a>
+    <% if @user.owned_lists.include?(@list_generator) %>
+      <a class="btn" href="/share-list/<%=@list_generator.id%>">Share this list</a>
+    <% end %>
+  </div>
+  <% end %>
+
+
   <table id="list_table" class="tablesorter table">
     <thead>
     <tr>

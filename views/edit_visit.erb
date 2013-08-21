@@ -1,8 +1,7 @@
 <h2>Edit visit to <%= @visit.restaurant.name %></h2>
 
   <form action = "/edit-visit/<%= @visit.id %>" method ="post"> 
-    <label for="delete">Delete this Visit</label> 
-    <input id="delete" name="delete" type="checkbox">
+    <label class="checkbox" for="delete"><input id="delete" name="delete" type="checkbox">Delete this Visit</label> 
     <label for="date">Change Date</label>
     <input id="date" name="visit[date]" type="date" value="<%=@visit.date%>">
     <br>

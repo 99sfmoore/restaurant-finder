@@ -20,12 +20,22 @@
             <li><a href="/user_history"><%=@user.name%>'s History</a></li>
           <% end %>
             <li class="dropdown">
-              <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Add Restaurant<b class="caret"></b></a>
+              <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Add Restaurants<b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <% if @user && @user.sources.size != 0 %>
                 <li><a href="/entry">To Existing List</a></li>
                 <% end %>
                 <li><a href="/create_list">To New List</a></li>
+                <li><a href="/load_source">From Blog List</a><li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" href="#">Friends<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/find-friends">Find Friends</a></li>
+                <% if @user && @user.friends.size != 0 %>
+                  <li><a href="/manage-friends">Manage Friend Permissions</a></li>
+                <% end %>
               </ul>
             </li>
            <li class="dropdown">

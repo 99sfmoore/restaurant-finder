@@ -1,5 +1,6 @@
 <h2>Add restaurants</h2>
   <form action = "/entry" method ="post">
+    <input type="hidden" name="new_list">
     <label for="new_source_name">Name of New List:</label>
     <input id="new_source_name" name="new_source_name" type="text">
     <label for="new_source_desc">Description of New List:</label>
@@ -9,6 +10,6 @@
       <input id="<%= "restaurant[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text">
       <br>
     <% end %>
-    <input type="submit" value="SUBMIT!"/>
+    <input type="submit" value="Submit"/>
   </form>
   

@@ -1,7 +1,7 @@
 
-<h2>Confirming additions <%if @source %><%= "to #{@source.name}" %><% end %>
-Supply new menulink if incorrect location or not available</h2>
-  <table>
+<div class="alert alert-info">You just added these restaurants to <%=@source.name%>!
+  If any locations are incorrect please edit the menu links.</div>
+  <table class="table">
     <tr>
       <% @headers.each do |head| %>
         <th><%= head %></th>
