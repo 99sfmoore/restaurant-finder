@@ -181,7 +181,6 @@ end
 
 #allow user to enter own lists
 get '/entry' do
-  @restaurant = Restaurant.new
   erb :create_entry
 end
 
@@ -200,7 +199,8 @@ post '/entry' do
     @source = Source.find_by(params[:source])
   end
   name_list = params[:restaurant].values.reject{|x| x==""}
-  @restaurant_list = @source.fill(name_list)
+
+  @restaurant_list = Restaurant.initialize_from_list(name_list)
   @headers = ["Name","Cuisine","Neighborhood","New Menulink","Same Name, Different Location"]
   erb :check_entry
 end

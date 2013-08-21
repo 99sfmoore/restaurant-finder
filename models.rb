@@ -7,27 +7,36 @@ require 'pry-nav'
 MENU_PAGES_URL = "http://www.menupages.com"
 
 class Restaurant < ActiveRecord::Base
-  has_and_belongs_to_many :sources
-  has_and_belongs_to_many :cuisines
+  validates :menulink, uniqueness: true
+  has_and_belongs_to_many :sources #conditions: {uniq: true}
+  has_and_belongs_to_many :cuisines #conditions: {uniq: true}
   has_many :notes
   belongs_to :neighborhood
   has_one :area, through: :neighborhood
   has_many :visits, dependent: :destroy
 
+  def self.initialize_from_list(names)
+    names.map do |name|
+      new_rest = Restaurant.find_or_initialize_by(name: name)
+      new_rest.fill
+    end
+  end
+
   def fill
     unless menulink
-      update_attributes(slug: name.to_url, menulink: get_menulink)
+      self.attributes={slug: name.to_url, menulink: get_menulink}
     end
-    if good_link
+    if good_link && area.nil?
       infopage = Nokogiri::HTML(open(menulink))
       nhood_info = get_neighborhood(infopage)
       area = Area.find_or_create_by(name: nhood_info[:area])
       neighborhood = Neighborhood.find_or_create_by(name: nhood_info[:neighborhood], area: area)
-      update_attributes(  address: get_address(infopage), 
-                          cross_street: get_cross_street(infopage),
-                          neighborhood: neighborhood )
-      cuisines.concat(get_cuisine(infopage)).uniq! #is this correct?
+      self.attributes={  address: get_address(infopage), 
+                    cross_street: get_cross_street(infopage),
+                    neighborhood: neighborhood }
+      cuisines.concat(get_cuisine(infopage))  
     end
+    self
   end
 
   def get_neighborhood(infopage)
@@ -77,6 +86,7 @@ class Restaurant < ActiveRecord::Base
 end
 
 class User < ActiveRecord::Base
+  validates :email, uniqueness: true
   has_many :visits
   has_many :friendships
   has_many :friends, through: :friendships
