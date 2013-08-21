@@ -4,24 +4,24 @@
   <table class="table sharing-table">
     <tr>
       <th class="sharing-table-friend">Friend</th>
-      <th class="text-success sharing-table-data">Can View &amp; Edit</th>
-      <th class="text-warning sharing-table-data">Can View</th>
-      <th class="text-error sharing-table-data">No Permissions</th>
+      <th class="sharing-table-data sharing-green">Can View &amp; Edit</th>
+      <th class="sharing-table-data sharing-yellow">Can View</th>
+      <th class="sharing-table-data sharing-gray">No Permissions</th>
     </tr>
     <% @user.friend_list.each do |friend| %>
       <tr>
         <td class="sharing-table-friend"><%=friend.name%></td>
-        <td class="sharing-table-data"><input type="radio" name="friends[<%=friend.id%>]" value = "joint"
+        <td class="sharing-table-data sharing-green"><input type="radio" name="friends[<%=friend.id%>]" value = "joint"
           <% if friend.joint_lists.include?(@source)  %>
               checked
           <%end%> >
         </td>
-        <td class="sharing-table-data"><input type="radio" name="friends[<%=friend.id%>]" value = "shared"
+        <td class="sharing-table-data sharing-yellow"><input type="radio" name="friends[<%=friend.id%>]" value = "shared"
               <% if friend.shared_lists.include?(@source)  %>
               checked
               <%end%> >
         </td>
-        <td class="sharing-table-data"><input type="radio" name="friends[<%=friend.id%>]" value = "none"
+        <td class="sharing-table-data sharing-gray"><input type="radio" name="friends[<%=friend.id%>]" value = "none"
               <% unless friend.sources.include?(@source)  %>
               checked
               <%end%> >
