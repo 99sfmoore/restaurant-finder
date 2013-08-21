@@ -7,6 +7,22 @@
   margin-top: 2%;
 }
 
+.content-indent {
+  padding-left: 15px;
+}
+
+input[type="radio"] {
+  width: 16px;
+}
+
+p {
+  font-size: 18px;
+}
+
+td > input[type=checkbox] {
+  margin-left: 20px;
+}
+
 /* list sharing */
 
 .sharing-table {
@@ -21,6 +37,10 @@
   text-align: center;
 }
 
+.sharing-table {
+  border: 2px solid #ddd;
+}
+
 .sharing-green {
   background-color: #dff0d8;
 }
@@ -30,6 +50,64 @@
 }
 
 .sharing-gray {
-  background-color: #e4eaed
+  background-color: #eee;
 }
 
+/** restaurant detail page **/
+
+.restaurant-header {
+  margin-top: 50px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.restaurant-actions {
+  margin-top: 44px;
+  margin-left: 20px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.restaurant-meta {
+  margin-top: 50px;
+}
+
+.restaurant-address {
+  font-size: 20px;
+}
+
+/* menu styles */
+
+.prices-three {
+  width: 100%;
+}
+
+.prices-three th {
+  text-align: left;
+}
+
+.prices-three {
+  text-align: right;
+}
+
+.prices-three td, .prices-three th {
+  padding: 5px 25px;
+}
+
+.prices-three tr {
+  border: 1px solid #ddd;
+}
+
+.prices-three tr:nth-of-type(2n) {
+  background-color: #eee;
+}
+
+.subtitle {
+  font-style: italic;
+}
+
+/** list edit **/
+
+.list-description-input {
+  width: 300px;
+}

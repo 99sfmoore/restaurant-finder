@@ -108,9 +108,10 @@ get '/list_by/:type/:slug' do
 end
 
 get '/custom' do
-  @search_lists = { "Lists" => @user.sources, #I'm not entirely sure how that brings in Public?
-                    "Cuisines" => Cuisine.order(:name),
-                    "Areas" => Area.order(:name)}
+  @search_lists = { "Areas" => Area.order(:name),
+                    "Cuisines" => Cuisine.order(:name),          
+                    "Lists" => @user.sources #I'm not entirely sure how that brings in Public?
+                    }
   erb :custom
 end
 
@@ -174,7 +175,7 @@ post '/correct-source/:source' do
   @base_source.save
   Restaurant.delete(@rest_ids_to_delete)
   @restaurant_list = @source.restaurants
-  @headers = ["Name","Cuisine","Neighborhood","New Menulink","New Link is for Different Location"]
+  @headers = ["Name","Cuisine","Neighborhood","New Menupages Link","New Link is for Different Location"]
   erb :check_entry
 end
 

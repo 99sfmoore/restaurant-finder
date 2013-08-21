@@ -1,10 +1,10 @@
 
-<h3>Enter e-mail addresses of friends:</h3>
+<h3>Enter your friends e-mail addresses:</h3>
 <form action='/find-friends' method="post">
-  <% 10.times do |n| %>
-    <input type = "text" name="email[<%=n%>]">
+  <% 4.times do |n| %>
+    <input type="text" name="email[<%=n%>]">
     <br>
   <%end%>
-  <input type = "submit" value="submit">
+  <input type="submit" class="btn btn-primary" value="submit">
 </form>
 

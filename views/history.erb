@@ -5,13 +5,14 @@
 <% elsif flash[:add] %>
   <div class="alert alert-success"><%= flash[:add] %></div>
 <% end %>
-<a class="btn" href = '/log-mult-visits'>Log Visits</a>
+<a class="btn btn-primary" href = '/log-mult-visits'>Record Meals</a>
 
   <table class="table">
     <tr>
       <th>Restaurant</th>
       <th>Date Visited</th>
       <th>Notes</th>
+      <th></th>
     </tr>
     <% @user.visits.sort_by{|v| v.date}.reverse.each do |visit| %>
     <tr>

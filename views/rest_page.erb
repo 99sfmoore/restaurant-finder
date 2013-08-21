@@ -1,34 +1,46 @@
+<div class="row">
+  <div class="span9">
+    <h1 class="restaurant-header"><%= @restaurant.name %></h1>
+      <div class="restaurant-actions"> 
+        <a class="btn btn-success" href="/log-visit/<%= @restaurant.slug %>">log visit</a>  
+        <a class="btn btn-info" href="/edit/<%=@restaurant.slug%>">edit</a>
+      </div>
+    <div class="restaurant-address content-indent"><%= @restaurant.address %>
+      <br><%= @restaurant.cross_street %>
+      <% if @restaurant.neighborhood %>
+        <br><a href="/list_by/area/<%=@restaurant.area.slug%>"><%= @restaurant.neighborhood.area.name %></a> / <a href="/list_by/neighborhood/<%= @restaurant.neighborhood.slug %>"><%= @restaurant.neighborhood.name %></a>
+      <%end%>
+    </div>
+    <h3> Notes</h3>
+    <p class="content-indent"><%= @restaurant.display_note(@user) %></p>
+    <h1 class="restaurant-header">Menu</h1>
+    <%= @restaurant.get_menu %>
 
-<h1><%= @restaurant.name %></h1> 
-<div class="pull-right">
-<div class="btn-group" >
-  <a class="btn" href="/log-visit/<%= @restaurant.slug %>">log visit</a>  
-  <a class="btn"href="/edit/<%=@restaurant.slug%>">edit</a>
+  </div>
+
+  <div class="span3">
+    <div class="well restaurant-meta">
+      <% if @restaurant.cuisines.any? %>
+        <h4 class="meta-header">Categories:</h4>
+        <ul class="meta-list">
+          <% @restaurant.cuisines.uniq.each do |cuisine| %>
+            <li><a href="/list_by/cuisine/<%=cuisine.slug%>"><%=cuisine.name%></a>
+            </li>
+          <%end%>
+        </ul>
+      <% end %>
+      <% if @restaurant.sources.any? %>
+        <h4 class="meta-header">Appears in lists:</h4>
+          <ul class="meta-list">
+          <% @restaurant.sources.each do |source| %>
+            <% if source.public? || @user.sources.include?(source) %>
+              <li><a href="/list_by/source/<%=source.slug%>"><%= source.name %></a></li>
+            <% end %>
+          <%end%>
+        </ul>
+      <% end %>
+      </div>
+  </div>
 </div>
-</div>
-
-
-<h4><%= @restaurant.address %>
-  <br><%= @restaurant.cross_street %>
-  <% if @restaurant.neighborhood %>
-    <br><a href="/list_by/area/<%=@restaurant.area.slug%>"><%= @restaurant.neighborhood.area.name %></a> / <a href="/list_by/neighborhood/<%= @restaurant.neighborhood.slug %>"><%= @restaurant.neighborhood.name %></a>
-  <%end%>
-  <% @restaurant.cuisines.uniq.each do |cuisine| %>
-    <br><a href="/list_by/cuisine/<%=cuisine.slug%>"><%=cuisine.name%></a>
-    <%end%></h4>
-  <h2>Appears in lists:</h2>
-  <h4>
-  <% @restaurant.sources.each do |source| %>
-    <% if source.public? || @user.sources.include?(source) %>
-    <a href="/list_by/source/<%=source.slug%>"><%= source.name %></a>
-    <br>
-    <% end %>
-    <%end%>
-  </h4>
-  <h2> Notes</h2>
-  <h4><%= @restaurant.display_note(@user) %></h4>
-  <h1>Menu</h1>
-  <%= @restaurant.get_menu %>
-
 
 
