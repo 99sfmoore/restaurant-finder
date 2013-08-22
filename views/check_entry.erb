@@ -10,14 +10,15 @@
         <th><%= head %></th>
       <% end %>
     </tr>
-    <% @@restaurant_list.each_with_index do |rest, index| %>
+    <% @restaurant_list.each_with_index do |rest, index| %>
     <tr>
       <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
       <td>
-        <% rest.cuisines.uniq.each do |cuisine| %>
+        <% rest.cuisines.each do |cuisine| %>
           <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
           <br>
         <% end %>
+        <input type="hidden" name="cuisines[<%=index%>]" value='<%=rest.cuisines.to_json%>'>
       </td>
       <td>
           <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>

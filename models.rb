@@ -34,7 +34,7 @@ class Restaurant < ActiveRecord::Base
       self.attributes={  address: get_address(infopage), 
                     cross_street: get_cross_street(infopage),
                     neighborhood: neighborhood }
-      cuisines.concat(get_cuisine(infopage))  
+      cuisines.concat(get_cuisine(infopage))
     end
     self
   end

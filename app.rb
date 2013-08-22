@@ -200,7 +200,7 @@ post '/entry' do
     @source = Source.find_by(params[:source])
   end
   name_list = params[:restaurant].values.reject{|x| x==""}
-  @@restaurant_list = Restaurant.initialize_from_list(name_list)
+  @restaurant_list = Restaurant.initialize_from_list(name_list)
   @headers = ["Name","Cuisine","Neighborhood","New Menulink","Delete"]
   erb :check_entry
 end
@@ -211,9 +211,10 @@ post '/correct-list' do
   @source = Source.find(params[:source])
   params[:rest].each do |index, rest_json|
     restaurant = Restaurant.find_or_initialize_by(JSON.parse(rest_json))
-    unless params[:delete][index]
-      if params[:links][index] != ""
+    unless params[:delete] && params[:delete][index]
+      if params[:links] && params[:links][index].size > 0
         if restaurant.menulink
+          restaurant.save
           new_loc = Restaurant.find_or_initialize_by( name: restaurant.name,
                                                       menulink: params[:links][index])
           new_loc.set_slug
@@ -223,6 +224,8 @@ post '/correct-list' do
           restaurant.menulink = params[:links][index]
           restaurant.fill
         end
+      else
+        restaurant.cuisines << Cuisine.find(JSON.parse(params[:cuisines][index]).map{|c| c["id"]})
       end
       restaurant.save
       restaurant.sources << @source if @source
