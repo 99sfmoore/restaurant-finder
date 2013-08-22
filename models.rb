@@ -69,6 +69,10 @@ class Restaurant < ActiveRecord::Base
     "#{MENU_PAGES_URL}/restaurants/#{name.gsub(/[^a-zA-Z0-9 ]/,"").gsub(/\s/,"-")}/menu"
   end
 
+  def set_slug
+    slug = menulink.match(/restaurants\/(.*)\/menu/)[1]
+  end
+
   def get_menu
     menupage = Nokogiri::HTML(open(menulink).read)
     menupage.encoding = 'utf-8'

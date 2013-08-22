@@ -1,15 +1,16 @@
 
 <div class="alert alert-info">You just added these restaurants to <%=@source.name%>!
-  If any locations are incorrect please edit the menu links.</div>
-  <table class="table">
+  If any locations are incorrect please edit the menu links.  Check 'delete' for any restaurants you don't want to import.</div>
+ 
+  <form action="/correct-list" method ="post">
+    <input type="hidden" name="source" value="<%=@source.id%>">
+     <table class="table">
     <tr>
       <% @headers.each do |head| %>
         <th><%= head %></th>
       <% end %>
     </tr>
-  <form action="/correct-list" method ="post">
-    <input type="hidden" name="source" value="<%=@source.id%>">
-    <% @restaurant_list.each do |rest| %>
+    <% @@restaurant_list.each_with_index do |rest, index| %>
     <tr>
       <td><a href = '/rest_page/<%= rest.slug %>'><%=rest.name %></a></td>
       <td>
@@ -18,13 +19,12 @@
           <br>
         <% end %>
       </td>
-      <% if @headers.include?("Neighborhood") %>
-        <td><%if rest.neighborhood %>
+      <td>
           <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
-          <%end%></td>
-      <% end %>
-      <td><input type="text" name="links[<%=rest.id%>]"></td>
-      <td><input type="checkbox" name="new_loc[<%=rest.id%>]>"></td>
+      </td>
+      <input type="hidden" name="rest[<%=index%>]" value='<%=rest.to_json%>'>
+      <td><input type="text" name="links[<%=index%>]"></td>
+      <td><input type="checkbox" name="delete[<%=index%>"></td>
     <% end %>
   </table>
   <input type="submit" class="btn btn-primary" value="Edit/Confirm">

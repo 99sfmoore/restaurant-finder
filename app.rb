@@ -6,6 +6,7 @@ require 'sinatra/flash'
 require 'pry-nav'  
 require 'bcrypt'
 require 'stringex'
+require 'json'
 
 require './models'
 
@@ -199,28 +200,32 @@ post '/entry' do
     @source = Source.find_by(params[:source])
   end
   name_list = params[:restaurant].values.reject{|x| x==""}
-
-  @restaurant_list = Restaurant.initialize_from_list(name_list)
-  @headers = ["Name","Cuisine","Neighborhood","New Menulink","Same Name, Different Location"]
+  @@restaurant_list = Restaurant.initialize_from_list(name_list)
+  @headers = ["Name","Cuisine","Neighborhood","New Menulink","Delete"]
   erb :check_entry
 end
 
 #updates menulinks to user-generated links
 post '/correct-list' do
+  binding.pry
   @source = Source.find(params[:source])
-  params[:links].each do |id,link|
-    unless link == ""
-      restaurant = Restaurant.find(id)
-      if params[:new_loc] && params[:new_loc].keys.include?(id)
-        new_restaurant = Restaurant.find_or_create_by(name: restaurant.name,
-                                                      menulink: link)
-        new_restaurant.sources << @source
-        restaurant.sources.delete(@source)
-        restaurant = new_restaurant
-      else
-        restaurant.update_attributes(menulink: link)
+  params[:rest].each do |index, rest_json|
+    restaurant = Restaurant.find_or_initialize_by(JSON.parse(rest_json))
+    unless params[:delete][index]
+      if params[:links][index] != ""
+        if restaurant.menulink
+          new_loc = Restaurant.find_or_initialize_by( name: restaurant.name,
+                                                      menulink: params[:links][index])
+          new_loc.set_slug
+          new_loc.fill
+          restaurant = new_loc
+        else
+          restaurant.menulink = params[:links][index]
+          restaurant.fill
+        end
       end
-      restaurant.fill
+      restaurant.save
+      restaurant.sources << @source if @source
     end
   end
   redirect "/list_by/source/#{@source.slug}"

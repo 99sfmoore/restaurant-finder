@@ -9,5 +9,6 @@ gem 'stringex'
 gem 'nokogiri'
 gem 'rake'
 gem 'sinatra-flash'
+gem 'json'
 
 gem 'pry-nav'
