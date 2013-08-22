@@ -209,26 +209,19 @@ end
 post '/correct-list' do
   binding.pry
   @source = Source.find(params[:source])
-  params[:rest].each do |index, rest_json|
-    restaurant = Restaurant.find_or_initialize_by(JSON.parse(rest_json))
-    unless params[:delete] && params[:delete][index]
-      if params[:links] && params[:links][index].size > 0
-        if restaurant.menulink
-          restaurant.save
-          new_loc = Restaurant.find_or_initialize_by( name: restaurant.name,
+  @not_found = []
+  params[:rest].each do |index, rest|
+    restaurant = Restaurant.find_or_initialize_by(name: rest)
+    if params[:links] && params[:links][index].size > 0
+      restaurant = Restaurant.find_or_initialize_by( name: restaurant.name,
                                                       menulink: params[:links][index])
-          new_loc.set_slug
-          new_loc.fill
-          restaurant = new_loc
-        else
-          restaurant.menulink = params[:links][index]
-          restaurant.fill
-        end
-      else
-        restaurant.cuisines << Cuisine.find(JSON.parse(params[:cuisines][index]).map{|c| c["id"]})
+      restaurant.set_slug
+      restaurant.fill
+    end
+    unless (params[:delete] && params[:delete][index])
+      if restaurant.good_link
+        restaurant.sources << @source if @source
       end
-      restaurant.save
-      restaurant.sources << @source if @source
     end
   end
   redirect "/list_by/source/#{@source.slug}"

@@ -18,12 +18,13 @@
           <a href = '/cuisine/<%= cuisine.slug%>'><%= cuisine.name %>
           <br>
         <% end %>
-        <input type="hidden" name="cuisines[<%=index%>]" value='<%=rest.cuisines.to_json%>'>
+        <!-- <input type="hidden" name="cuisines[<%=index%>]" value='<%=rest.cuisines.to_json%>'> -->
       </td>
-      <td>
+      <td><% if rest.neighborhood %>
           <a href = '/neighborhood/<%= rest.neighborhood.id %>'><%= rest.neighborhood.name %>
+            <%end%>
       </td>
-      <input type="hidden" name="rest[<%=index%>]" value='<%=rest.to_json%>'>
+      <input type="hidden" name="rest[<%=index%>]" value="<%=rest.name%>">
       <td><input type="text" name="links[<%=index%>]"></td>
       <td><input type="checkbox" name="delete[<%=index%>"></td>
     <% end %>

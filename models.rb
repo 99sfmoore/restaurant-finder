@@ -8,6 +8,7 @@ MENU_PAGES_URL = "http://www.menupages.com"
 
 class Restaurant < ActiveRecord::Base
   validates :menulink, uniqueness: true
+  validates :neighborhood, presence: true
   has_and_belongs_to_many :sources #conditions: {uniq: true}
   has_and_belongs_to_many :cuisines #conditions: {uniq: true}
   has_many :notes
@@ -35,6 +36,7 @@ class Restaurant < ActiveRecord::Base
                     cross_street: get_cross_street(infopage),
                     neighborhood: neighborhood }
       cuisines.concat(get_cuisine(infopage))
+      self.save
     end
     self
   end
@@ -48,7 +50,7 @@ class Restaurant < ActiveRecord::Base
   end
 
   def good_link
-    Net::HTTP.get_response(URI.parse(menulink)).code.to_i == 200
+    (menulink =~ /www\./) && Net::HTTP.get_response(URI.parse(menulink)).code.to_i == 200
   end
 
   def get_address(infopage)
