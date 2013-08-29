@@ -25,7 +25,8 @@
             <%end%>
       </td>
       <input type="hidden" name="rest[<%=index%>]" value="<%=rest.name%>">
-      <td><input type="text" name="links[<%=index%>]"></td>
+      <td><input type="text" name="links[<%=index%>]" <%unless rest.neighborhood%> value="Please enter a valid menu link"<% end%>"></td>
+      <td><input type="text" name="notes[<%=index%>]"value="<%= rest.display_note(@user) %>"</td>
       <td><input type="checkbox" name="delete[<%=index%>"></td>
     <% end %>
   </table>

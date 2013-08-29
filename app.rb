@@ -203,13 +203,12 @@ post '/entry' do
   end
   name_list = params[:restaurant].values.reject{|x| x==""}
   @restaurant_list = Restaurant.initialize_from_list(name_list)
-  @headers = ["Name","Cuisine","Neighborhood","New Menulink","Delete"]
+  @headers = ["Name","Cuisine","Neighborhood","New Menulink","Notes","Delete"]
   erb :check_entry
 end
 
 #updates menulinks to user-generated links
 post '/correct-list' do
-  binding.pry
   @source = Source.find(params[:source])
   @not_found = []
   params[:rest].each do |index, rest|
@@ -223,6 +222,10 @@ post '/correct-list' do
     unless (params[:delete] && params[:delete][index])
       if restaurant.good_link
         restaurant.sources << @source if @source
+      end
+      unless params[:notes][index] == "" 
+        note = Note.find_or_create_by(restaurant: restaurant, user: @user)
+        note.update_attributes(content: params[:notes][index])
       end
     end
   end
