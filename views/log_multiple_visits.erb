@@ -11,7 +11,7 @@
       </tr>
       <% @lines.times do |n| %>
       <tr>
-        <td><input type = "text" name = "<%=n%>[restaurant]"></td>
+        <td><input type = "text" name = "<%=n%>[restaurant]" data-provide="typeahead" data-source='<%= @allrest %>' autocomplete="off"></td>
         <td><input type = "date" name = "<%=n%>[date]"</td>
         <td><input type = "text" name = "<%=n%>[note]"</td>
       </tr>

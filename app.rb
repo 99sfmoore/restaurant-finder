@@ -328,6 +328,7 @@ end
 
 get '/log-mult-visits' do
   @lines = 10
+  @allrest = Restaurant.array_of_names
   erb :log_multiple_visits
 end
 
