@@ -1,22 +1,14 @@
 <h2>Add restaurants</h2>
-  <form action = "/entry" method ="post">
-    <input type="hidden" name="new_list">
-    <label for="new_source_name">Name of New List:</label>
-    <input id="new_source_name" name="new_source_name" type="text">
-    <label for="new_source_desc">Description of New List:</label>
-    <input id="new_source_desc" name="new_source_desc" type="text">
-    <table class="table">
-      <tr>
-        <th>Restaurant Names to Add</th>
-        <th>Notes (optional)</th>
-      </tr>
-          <% 4.times do |n| %>
-            <tr>
-            <td><input id="<%= "restaurant[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text" data-provide="typeahead" data-source="<%= @allrest %>" autocomplete="off"></td>
-            <td><input id="<%= "notes[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text"></td>
-          </tr>
-    <% end %>
-  </table>
-    <input type="submit" class="btn btn-primary" value="Submit"/>
-  </form>
-  
+<form action = "/entry" method ="post">
+  <input type="hidden" name="new_list">
+  <label for="new_source_name">Name of New List:</label>
+  <input id="new_source_name" name="new_source_name" type="text">
+  <label for="new_source_desc">Description of New List:</label>
+  <input id="new_source_desc" name="new_source_desc" type="text">
+  <h4>Restaurant Names to Add</h4>
+  <% 4.times do |n| %>
+    <input id="<%= "restaurant[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text" data-provide="typeahead" data-source='<%= @allrest %>' autocomplete="off">
+    <br>
+  <% end %>
+  <input type="submit" class="btn btn-primary" value="Submit"/>
+</form>

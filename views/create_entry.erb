@@ -1,24 +1,17 @@
 <h2>Add restaurants</h2>
-  <form action = "/entry" method ="post">
-    <label for="source_name">Select a list:</label>
-    <select name="source[id]">
-      <% @user.owned_lists.concat(@user.joint_lists).each do |source| %>
-        <option value = "<%= source.id %>"><%=source.name%></option>
-        <% end %> 
-    </select>
-    <table class="table">
-      <tr>
-        <th>Restaurant Names to Add</th>
-        <th>Notes (optional)</th>
-      </tr>
-          <% 4.times do |n| %>
-            <tr>
-            <td><input id="<%= "restaurant[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text" data-provide="typeahead" data-source='<%= @allrest %>' autocomplete="off"></td>
-            <td><input id="<%= "notes[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text"></td>
-          </tr>
-    <% end %>
-  </table>
-    <input type="submit" class="btn btn-primary" value="Submit"/>
-  </form>
-  
+<form action = "/entry" method ="post">
+  <label for="source_name">Select a list:</label>
+  <select name="source[id]">
+    <% @user.owned_lists.concat(@user.joint_lists).each do |source| %>
+    <option value = "<%= source.id %>"><%=source.name%></option>
+    <% end %> 
+  </select>
+  <h4>Restaurant Names to Add</h4>
+  <% 4.times do |n| %>
+  <input id="<%= "restaurant[#{n}]" %>" name="<%= "restaurant[#{n}]" %>" type="text" data-provide="typeahead" data-source='<%= @allrest %>' autocomplete="off">
+  <br>
+  <% end %>
+  <input type="submit" class="btn btn-primary" value="Submit"/>
+</form>
+
 
