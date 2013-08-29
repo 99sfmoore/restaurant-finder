@@ -23,6 +23,10 @@ class Restaurant < ActiveRecord::Base
     end
   end
 
+  def self.array_of_names
+    self.pluck(:name).map{|n| n.gsub("'","&#x27;")}
+  end
+
   def fill
     unless menulink
       self.attributes={slug: name.to_url, menulink: get_menulink}
@@ -191,8 +195,8 @@ class Source < ActiveRecord::Base
     restaurant_list = []
     name_list = name_list || scrape
     name_list.each do |name|
-      restaurant = Restaurant.find_or_create_by(name: name)
-      restaurant.fill unless restaurant.menulink #restaurant already exists
+      restaurant = Restaurant.find_or_initialize_by(name: name)
+      restaurant.fill
       self.restaurants << restaurant
       restaurant_list << restaurant
     end

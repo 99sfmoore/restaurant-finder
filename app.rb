@@ -166,7 +166,7 @@ post '/load_source' do
   erb :correct_source
 end
 
-#delete incorrectly loaded items
+#delete incorrectly loaded items #THIS NEEDS TO BE FIXED FOR NEW NON-SAVING CASE
 post '/correct-source/:source' do
   @source = Source.find_by(slug: params[:source])
   @base_source = @source.base_source
@@ -174,7 +174,7 @@ post '/correct-source/:source' do
   @errors = Restaurant.find(@rest_ids_to_delete).map{|r| r.name}
   @base_source.bad_names.concat(@errors)
   @base_source.save
-  Restaurant.delete(@rest_ids_to_delete)
+  Restaurant.delete(@rest_ids_to_delete) #don't need to delete, because they were never made
   @restaurant_list = @source.restaurants
   @headers = ["Name","Cuisine","Neighborhood","New Menupages Link","New Link is for Different Location"]
   erb :check_entry
@@ -182,10 +182,12 @@ end
 
 #allow user to enter own lists
 get '/entry' do
+  @allrest = Restaurant.array_of_names
   erb :create_entry
 end
 
 get '/create_list' do
+  @allrest = Restaurant.array_of_names
   erb :create_new_list
 end
 
