@@ -7,7 +7,6 @@ gem 'bcrypt-ruby'
 gem 'activerecord'
 group :development do
   gem 'mysql2'
-  gem 'pry-nav'
 end
 
 group :production do

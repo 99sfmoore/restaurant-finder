@@ -2,7 +2,6 @@ require 'nokogiri'
 require 'net/http'
 require 'open-uri'
 require 'stringex'
-require 'pry-nav'
 
 MENU_PAGES_URL = "http://www.menupages.com"
 
