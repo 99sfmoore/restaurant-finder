@@ -1,0 +1,57 @@
+<h3>Set List Permissions for Friends: </h3>
+
+<form action="/manage-friends" method="post">
+  <label for="friend">Choose Friend</label>
+  <select name="friend">
+    <option value="All">All Friends</option>
+    <option value="Default">Default for New Friends</option>
+    <% @user.friend_list.each do |f| %>
+    <option value="<%= f.id %>"><%= f.name %></option>
+    <% end %>
+  </select>
+  <br>
+  <div id="test"></div>
+  <br>
+  <table class="table sharing-table">
+    <tr>
+      <th class="sharing-table-friend">List</th>
+      <th class="sharing-table-data sharing-green">Can View &amp; Edit</th>
+      <th class="sharing-table-data sharing-yellow">Can View</th>
+      <th class="sharing-table-data sharing-gray">No Permissions</th>
+    </tr>
+    <% @user.owned_lists.each do |list| %>
+      <tr>
+        <td class="sharing-table-friend"><%=list.name%></td>
+        <td class="sharing-table-data sharing-green"><input type="radio" name="lists[<%=list.id%>]" value = "joint"
+          <% if true  %>
+              checked
+          <%end%> >
+        </td>
+        <td class="sharing-table-data sharing-yellow"><input type="radio" name="list[<%=list.id%>]" value = "shared"
+              <% if false  %>
+              checked
+              <%end%> >
+        </td>
+        <td class="sharing-table-data sharing-gray"><input type="radio" name="list[<%=list.id%>]" value = "none"
+              <% unless true  %>
+              checkedls
+              
+              <%end%> >
+        </td>
+      </tr>
+    <% end %>
+    </table>
+    <input type="submit" class="btn btn-primary" value="Update Permissions">
+</form>
+
+<script>
+    $("select").change(function(){
+      var my_friend = $(this).val();
+    $( "select option:selected" ).each(function() {
+      my_friend = $( this ).val();
+    });
+    $( "#test" ).text(my_friend);
+  })
+  .change();
+</script>
+
