@@ -8,11 +8,12 @@ require 'stringex'
 require 'json'
 
 require './models'
+require './environments'
 
 
 enable :sessions 
 
-set :database, "mysql2://root@localhost/restaurantproject2"
+#set :database, "mysql2://root@localhost/restaurantproject2"
 
 #this whole thing is weird
 
