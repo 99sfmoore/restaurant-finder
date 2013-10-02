@@ -1,14 +1,23 @@
 source 'https://rubygems.org'
+ruby '2.0.0'
 
 gem 'sinatra'
 gem 'sinatra-activerecord'
 gem 'bcrypt-ruby'
 gem 'activerecord'
-gem 'mysql2'
+group :development do
+  gem 'mysql2'
+  gem 'pry-nav'
+end
+
+group :production do
+  gem 'pg', '0.15.1'
+end
+
+
 gem 'stringex'
 gem 'nokogiri'
 gem 'rake'
 gem 'sinatra-flash'
 gem 'json'
 
-gem 'pry-nav'

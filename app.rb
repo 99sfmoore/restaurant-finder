@@ -396,6 +396,13 @@ post '/accept-friendship' do
   redirect '/'
 end
 
+get '/manage-friends' do
+  erb :friend_permission
+end
+
+post '/manage-friends' do
+end
+
 get '/share-list/:source' do
   @source = Source.find(params[:source])
   erb :share_list
