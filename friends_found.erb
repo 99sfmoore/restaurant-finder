@@ -1,0 +1,20 @@
+<div class="row">
+<% unless @new_friends.empty? %>
+  <div class="span6">
+  <p class="alert alert-info">Invitations have been sent to:</p>
+  <br>
+  <% @new_friends.each do |friend| %>
+    <p><%= friend.name%>   <%= friend.email %></p>
+  <% end %>
+<% end %>
+</div>
+<% unless @not_found.empty? %>
+<div class="span6"
+  <p class="alert alert-error">There are no users with these e-mail addresses yet:</p>
+  <% @not_found.each do |addr| %>
+    <p><%= addr %><p>
+  <% end %>
+<% end %>
+</div>
+</row>
+

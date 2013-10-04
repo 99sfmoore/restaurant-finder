@@ -1,0 +1,40 @@
+
+body {
+  background-color: blue;
+}
+
+div.block-anchor > a {
+  background-color: green;
+}
+
+p > strong > a {
+  background-color: blue;
+}
+
+li.address.adr > span.addr.street-address {
+  background-color: green;
+}
+
+li.address.adr > span.city-zip > span.locality {
+  background-color: blue;
+}
+
+li.cross-street {
+  background-color: red;
+}
+
+li.cuisine.category {
+  background-color: yellow;
+}
+
+div#breadcrumbs p > a {
+  background-color: yellow;
+}
+
+h6 {
+  background-color: blue;
+}
+
+            
+
+
